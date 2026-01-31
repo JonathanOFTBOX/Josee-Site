@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-gray-800;
+    background: linear-gradient(135deg, #fff1f2 0%, #fdf8f6 25%, #ffe4e6 50%, #f2e8e5 75%, #fff1f2 100%);
+    background-size: 400% 400%;
+    animation: gradient-bg 15s ease infinite;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+
+  /* Custom selection color */
+  ::selection {
+    @apply bg-primary-300 text-primary-900;
+  }
+}
+
+@layer components {
+
+  /* Glassmorphism card */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+    box-shadow: 0 8px 32px 0 rgba(161, 128, 114, 0.1);
+  }
+
+  .glass-dark {
+    @apply bg-primary-900/80 backdrop-blur-md border border-primary-700/30;
+  }
+
+  /* Glow button effect */
+  .btn-glow {
+    @apply relative overflow-hidden;
+    transition: all 0.3s ease;
+  }
+
+  .btn-glow::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
+
+  .btn-glow:hover::before {
+    @apply opacity-100;
+    animation: shimmer 1s ease-in-out;
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 30px rgba(161, 128, 114, 0.5);
+    transform: translateY(-2px);
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #8b6f64 0%, #a18072 50%, #d2bab0 100%);
+  }
+
+  /* Animated underline */
+  .animated-underline {
+    @apply relative;
+  }
+
+  .animated-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-400 to-primary-600 transition-all duration-300;
+  }
+
+  .animated-underline:hover::after {
+    @apply w-full;
+  }
+
+  /* Floating animation for elements */
+  .floating {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-delayed {
+    animation: float 6s ease-in-out 2s infinite;
+  }
+
+  /* Card with gradient border */
+  .gradient-border {
+    @apply relative bg-white rounded-2xl;
+  }
+
+  .gradient-border::before {
+    content: '';
+    @apply absolute -inset-0.5 rounded-2xl opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, #a18072, #d2bab0, #fecdd3, #a18072);
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
+    z-index: -1;
+  }
+
+  .gradient-border:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Neumorphic input */
+  .input-modern {
+    @apply w-full px-5 py-4 rounded-2xl border-0 outline-none transition-all duration-300;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow:
+      inset 2px 2px 5px rgba(0, 0, 0, 0.05),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+  }
+
+  .input-modern:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow:
+      0 0 0 3px rgba(161, 128, 114, 0.2),
+      inset 2px 2px 5px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Blob decoration */
+  .blob {
+    @apply absolute rounded-full filter blur-3xl opacity-30;
+    animation: blob 7s infinite;
+  }
+}
+
+@layer utilities {
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Keyframes */
+@keyframes gradient-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
