@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
-import { Phone, MapPin, Clock, Send, Car } from 'lucide-react';
+import { Phone, MapPin, Clock, Send, Car, CheckCircle, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZDl6thNG5QL7gCXM7Q7hD45MwrWYX85LRUAorpS0enL4Cli09l18_BarIwL8Uf2qr/exec';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -10,9 +12,50 @@ const Contact = () => {
         message: ''
     });
     const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [statusMessage, setStatusMessage] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitStatus('idle');
+
+        try {
+            // Build the message with all contact info
+            const fullMessage = `Téléphone: ${formData.phone}\nAdresse: ${formData.address}\n\nMessage:\n${formData.message}`;
+
+            const params = new URLSearchParams({
+                name: formData.name,
+                email: formData.phone, // Using phone as email field for now
+                message: fullMessage
+            });
+
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: params,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                setSubmitStatus('success');
+                setStatusMessage('Merci! Votre demande a été envoyée. Je vous contacterai sous peu.');
+                setFormData({ name: '', phone: '', address: '', message: '' });
+            } else {
+                throw new Error(result.message || 'Erreur lors de l\'envoi');
+            }
+        } catch (error) {
+            setSubmitStatus('error');
+            setStatusMessage('Une erreur est survenue. Veuillez appeler directement au 514-238-7562.');
+            console.error('Form submission error:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const contactInfo = [
@@ -154,15 +197,30 @@ const Contact = () => {
                                 Demande de <span className="text-gradient">rendez-vous</span>
                             </h3>
 
-                            <form className="space-y-6">
+                            {/* Status Message */}
+                            {submitStatus !== 'idle' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className={`flex items-center gap-3 p-4 rounded-xl ${submitStatus === 'success'
+                                        ? 'bg-green-50 text-green-700 border border-green-200'
+                                        : 'bg-red-50 text-red-700 border border-red-200'
+                                        }`}
+                                >
+                                    {submitStatus === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
+                                    <span>{statusMessage}</span>
+                                </motion.div>
+                            )}
+
+                            <form className="space-y-6" onSubmit={handleSubmit}>
                                 <div className="grid md:grid-cols-2 gap-6">
                                     {/* Name Input */}
                                     <div className="relative">
                                         <motion.label
                                             htmlFor="name"
                                             className={`absolute left-5 transition-all duration-300 pointer-events-none ${focusedField === 'name' || formData.name
-                                                    ? 'top-2 text-xs text-primary-600 font-medium'
-                                                    : 'top-4 text-gray-500'
+                                                ? 'top-2 text-xs text-primary-600 font-medium'
+                                                : 'top-4 text-gray-500'
                                                 }`}
                                         >
                                             Nom complet
@@ -183,8 +241,8 @@ const Contact = () => {
                                         <motion.label
                                             htmlFor="phone"
                                             className={`absolute left-5 transition-all duration-300 pointer-events-none ${focusedField === 'phone' || formData.phone
-                                                    ? 'top-2 text-xs text-primary-600 font-medium'
-                                                    : 'top-4 text-gray-500'
+                                                ? 'top-2 text-xs text-primary-600 font-medium'
+                                                : 'top-4 text-gray-500'
                                                 }`}
                                         >
                                             Téléphone
@@ -206,8 +264,8 @@ const Contact = () => {
                                     <motion.label
                                         htmlFor="address"
                                         className={`absolute left-5 transition-all duration-300 pointer-events-none ${focusedField === 'address' || formData.address
-                                                ? 'top-2 text-xs text-primary-600 font-medium'
-                                                : 'top-4 text-gray-500'
+                                            ? 'top-2 text-xs text-primary-600 font-medium'
+                                            : 'top-4 text-gray-500'
                                             }`}
                                     >
                                         Votre adresse (pour le service à domicile)
@@ -228,8 +286,8 @@ const Contact = () => {
                                     <motion.label
                                         htmlFor="message"
                                         className={`absolute left-5 transition-all duration-300 pointer-events-none ${focusedField === 'message' || formData.message
-                                                ? 'top-2 text-xs text-primary-600 font-medium'
-                                                : 'top-4 text-gray-500'
+                                            ? 'top-2 text-xs text-primary-600 font-medium'
+                                            : 'top-4 text-gray-500'
                                             }`}
                                     >
                                         Type de soin souhaité / Message
@@ -247,13 +305,23 @@ const Contact = () => {
 
                                 {/* Submit Button */}
                                 <motion.button
-                                    type="button"
-                                    className="btn-glow w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold py-4 rounded-2xl shadow-glow flex items-center justify-center gap-3"
-                                    whileHover={{ scale: 1.02, y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="btn-glow w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold py-4 rounded-2xl shadow-glow flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
+                                    whileHover={!isSubmitting ? { scale: 1.02, y: -2 } : {}}
+                                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                                 >
-                                    <Send size={20} />
-                                    <span>Envoyer ma demande</span>
+                                    {isSubmitting ? (
+                                        <>
+                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            <span>Envoi en cours...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send size={20} />
+                                            <span>Envoyer ma demande</span>
+                                        </>
+                                    )}
                                 </motion.button>
                             </form>
                         </div>
