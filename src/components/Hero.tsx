@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Calendar, ArrowRight, Heart, Shield, MapPin, Phone } from 'lucide-react';
+import { ArrowRight, Heart, Shield, MapPin, Phone } from 'lucide-react';
 import { useRef } from 'react';
 import heroImage from '../assets/images/hero-foot-care.png';
 

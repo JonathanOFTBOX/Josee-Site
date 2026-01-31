@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Award, Heart, Car, Sparkles, Users } from 'lucide-react';
+import { Heart, Car, Sparkles, Users } from 'lucide-react';
 import { useRef } from 'react';
 import joseeImage from '../assets/images/josee-portrait.jpg';
 
