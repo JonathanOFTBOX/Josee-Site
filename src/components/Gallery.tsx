@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Import real photos from Josée's work
 import realNailsRed from '../assets/images/real-nails-red.jpg';
@@ -30,6 +30,18 @@ interface WorkItem {
 const Gallery = () => {
     const [selectedWork, setSelectedWork] = useState<WorkItem | null>(null);
     const [activeCategory, setActiveCategory] = useState('all');
+
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (selectedWork) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [selectedWork]);
 
     const categories = [
         { id: 'all', label: 'Tous les soins' },
@@ -208,8 +220,8 @@ const Gallery = () => {
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
                             className={`px-6 py-3 rounded-full font-medium transition-all ${activeCategory === cat.id
-                                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-glow'
-                                    : 'glass text-gray-700 hover:shadow-md'
+                                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-glow'
+                                : 'glass text-gray-700 hover:shadow-md'
                                 }`}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -291,40 +303,44 @@ const Gallery = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
                             onClick={() => setSelectedWork(null)}
                         >
                             <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.8, opacity: 0 }}
-                                className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl"
+                                className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col relative"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                {/* Image */}
-                                <div className="relative h-72">
-                                    <img
-                                        src={selectedWork.image}
-                                        alt={selectedWork.title}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                                        <h3 className="text-2xl font-bold mb-2">{selectedWork.title}</h3>
-                                        <p className="text-white/80">{selectedWork.description}</p>
-                                    </div>
+                                {/* Close button - Fixed at top right of modal */}
+                                <button
+                                    onClick={() => setSelectedWork(null)}
+                                    className="absolute top-4 right-4 z-20 w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/40 transition-colors"
+                                    aria-label="Fermer"
+                                >
+                                    ✕
+                                </button>
 
-                                    {/* Close button */}
-                                    <button
-                                        onClick={() => setSelectedWork(null)}
-                                        className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-colors"
-                                    >
-                                        ✕
-                                    </button>
+                                {/* Scrollable content container */}
+                                <div className="overflow-y-auto custom-scrollbar">
+                                    {/* Image */}
+                                    <div className="relative h-64 md:h-72 w-full flex-shrink-0">
+                                        <img
+                                            src={selectedWork.image}
+                                            alt={selectedWork.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                                        <div className="absolute bottom-6 left-6 right-6 text-white">
+                                            <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">{selectedWork.title}</h3>
+                                            <p className="text-white/80 text-sm md:text-base">{selectedWork.description}</p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Testimonial */}
-                                <div className="p-8">
+                                <div className="p-6 md:p-8">
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0">
                                             <Quote size={20} className="text-white" />
@@ -345,17 +361,17 @@ const Gallery = () => {
                                     </div>
 
                                     {/* CTA */}
-                                    <div className="mt-8 flex gap-4">
+                                    <div className="mt-8 flex flex-col sm:flex-row gap-3 md:gap-4">
                                         <a
                                             href="tel:5142387562"
-                                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 rounded-full font-semibold text-center hover:shadow-glow transition-all"
+                                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 md:py-4 rounded-full font-semibold text-center hover:shadow-glow transition-all text-sm md:text-base"
                                         >
                                             📞 Appeler Josée
                                         </a>
                                         <a
                                             href="#contact"
                                             onClick={() => setSelectedWork(null)}
-                                            className="flex-1 glass py-4 rounded-full font-semibold text-center text-primary-600 hover:shadow-md transition-all"
+                                            className="flex-1 glass py-3 md:py-4 rounded-full font-semibold text-center text-primary-600 hover:shadow-md transition-all text-sm md:text-base"
                                         >
                                             ✉️ Me contacter
                                         </a>
