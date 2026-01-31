@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Calendar, ArrowRight, Heart, Shield, MapPin } from 'lucide-react';
+import { Calendar, ArrowRight, Heart, Shield, MapPin, Phone } from 'lucide-react';
 import { useRef } from 'react';
 import heroImage from '../assets/images/hero-foot-care.png';
 
@@ -15,167 +15,126 @@ const Hero = () => {
 
     // Floating badges data
     const badges = [
-        { icon: <Heart size={16} />, text: "Soins doux", delay: 0 },
-        { icon: <MapPin size={16} />, text: "À domicile", delay: 0.2 },
-        { icon: <Shield size={16} />, text: "Certifiée", delay: 0.4 },
+        { icon: <Heart size={14} />, text: "Soins doux", delay: 0 },
+        { icon: <MapPin size={14} />, text: "À domicile", delay: 0.2 },
+        { icon: <Shield size={14} />, text: "Certifiée", delay: 0.4 },
     ];
 
     return (
         <section
             id="home"
             ref={containerRef}
-            className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+            className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-8"
         >
             {/* Animated Gradient Blobs */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="blob bg-primary-200/40 w-[600px] h-[600px] -top-[20%] -left-[10%]" />
-                <div className="blob bg-rose-200/50 w-[500px] h-[500px] top-[20%] -right-[15%]" style={{ animationDelay: '2s' }} />
-                <div className="blob bg-primary-100/60 w-[400px] h-[400px] -bottom-[10%] left-[20%]" style={{ animationDelay: '4s' }} />
-
-                {/* Subtle grid pattern */}
-                <div
-                    className="absolute inset-0 opacity-[0.03]"
-                    style={{
-                        backgroundImage: 'radial-gradient(circle at 1px 1px, #8b6f64 1px, transparent 0)',
-                        backgroundSize: '40px 40px'
-                    }}
-                />
+                <div className="blob bg-primary-200/40 w-[400px] md:w-[600px] h-[400px] md:h-[600px] -top-[20%] -left-[10%]" />
+                <div className="blob bg-rose-200/50 w-[300px] md:w-[500px] h-[300px] md:h-[500px] top-[20%] -right-[15%]" style={{ animationDelay: '2s' }} />
             </div>
 
             <motion.div
                 style={{ y, opacity }}
-                className="container mx-auto px-4 z-10 grid md:grid-cols-2 gap-12 items-center"
+                className="container mx-auto px-4 z-10"
             >
-                {/* Text Content */}
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="text-left"
-                >
-                    {/* Floating Badges */}
-                    <div className="flex flex-wrap gap-3 mb-6">
-                        {badges.map((badge, index) => (
-                            <motion.span
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: badge.delay + 0.5, duration: 0.5 }}
-                                className="inline-flex items-center gap-2 py-2 px-4 rounded-full glass text-primary-700 text-sm font-medium"
-                            >
-                                {badge.icon}
-                                {badge.text}
-                            </motion.span>
-                        ))}
-                    </div>
+                {/* Mobile: Image first, then content */}
+                <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-12 items-center">
 
-                    {/* Main Headline with Gradient */}
-                    <motion.h1
-                        className="font-serif text-5xl md:text-6xl lg:text-7xl text-primary-900 leading-tight mb-6"
+                    {/* Hero Image - Shows first on mobile */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative order-1 md:order-2 w-full"
+                    >
+                        <motion.div
+                            className="relative z-10 rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-xl"
+                        >
+                            <img
+                                src={heroImage}
+                                alt="Soin des pieds relaxant à domicile"
+                                className="w-full h-[250px] sm:h-[350px] md:h-[500px] object-cover"
+                            />
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Text Content - Shows second on mobile */}
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 0.8 }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                        className="text-center md:text-left order-2 md:order-1"
                     >
-                        Vos pieds méritent <br />
-                        <span className="relative">
+                        {/* Floating Badges */}
+                        <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                            {badges.map((badge, index) => (
+                                <motion.span
+                                    key={index}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: badge.delay + 0.3, duration: 0.5 }}
+                                    className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full glass text-primary-700 text-xs font-medium"
+                                >
+                                    {badge.icon}
+                                    {badge.text}
+                                </motion.span>
+                            ))}
+                        </div>
+
+                        {/* Main Headline */}
+                        <motion.h1
+                            className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-primary-900 leading-tight mb-4"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
+                        >
+                            Vos pieds méritent{' '}
                             <span className="text-gradient italic">l'excellence</span>
-                            <motion.svg
-                                viewBox="0 0 200 12"
-                                className="absolute -bottom-2 left-0 w-full"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 1 }}
-                                transition={{ delay: 1, duration: 1 }}
+                        </motion.h1>
+
+                        <motion.p
+                            className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 max-w-lg mx-auto md:mx-0 leading-relaxed"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4, duration: 0.8 }}
+                        >
+                            Soins podologiques et manucure <strong>à votre domicile</strong>.
+                            Service personnalisé à Saint-Amable et environs (30 km).
+                        </motion.p>
+
+                        {/* CTA Buttons - Stacked on mobile */}
+                        <motion.div
+                            className="flex flex-col gap-3"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6, duration: 0.8 }}
+                        >
+                            {/* Primary CTA - Call */}
+                            <motion.a
+                                href="tel:5142387562"
+                                className="flex items-center justify-center gap-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-4 rounded-full shadow-lg font-semibold text-base"
+                                whileTap={{ scale: 0.98 }}
                             >
-                                <motion.path
-                                    d="M0,6 Q50,12 100,6 T200,6"
-                                    fill="none"
-                                    stroke="url(#gradient)"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                    initial={{ pathLength: 0 }}
-                                    animate={{ pathLength: 1 }}
-                                    transition={{ delay: 1, duration: 1 }}
-                                />
-                                <defs>
-                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#a18072" />
-                                        <stop offset="100%" stopColor="#d2bab0" />
-                                    </linearGradient>
-                                </defs>
-                            </motion.svg>
-                        </span>
-                    </motion.h1>
+                                <Phone size={20} />
+                                <span>Appeler: 514-238-7562</span>
+                            </motion.a>
 
-                    <motion.p
-                        className="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4, duration: 0.8 }}
-                    >
-                        Soins podologiques et manucure professionnels <strong>directement à votre domicile</strong>. Service personnalisé dans la région de Saint-Amable et environs (30 km).
-                    </motion.p>
-
-                    {/* CTA Buttons */}
-                    <motion.div
-                        className="flex flex-col sm:flex-row gap-4"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6, duration: 0.8 }}
-                    >
-                        <motion.a
-                            href="#contact"
-                            className="btn-glow flex items-center justify-center gap-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-4 rounded-full shadow-glow-lg font-semibold"
-                            whileHover={{ scale: 1.03, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <Calendar size={20} />
-                            <span>Prendre Rendez-vous</span>
-                            <motion.div
-                                className="w-2 h-2 rounded-full bg-white"
-                                animate={{ scale: [1, 1.5, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                        </motion.a>
-                        <motion.a
-                            href="#services"
-                            className="group flex items-center justify-center gap-2 glass text-primary-800 px-8 py-4 rounded-full font-medium hover:bg-white/80 transition-all"
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <span>Découvrir nos soins</span>
-                            <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
-                        </motion.a>
+                            {/* Secondary CTA */}
+                            <motion.a
+                                href="#services"
+                                className="flex items-center justify-center gap-2 glass text-primary-800 px-6 py-3 rounded-full font-medium"
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <span>Découvrir nos soins</span>
+                                <ArrowRight size={18} />
+                            </motion.a>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-
-                {/* Hero Image with Modern Styling */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative"
-                >
-                    {/* Main Image Card */}
-                    <motion.div
-                        className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-3d"
-                        whileHover={{ y: -5 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    >
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary-900/20 via-transparent to-transparent z-10" />
-
-                        <img
-                            src={heroImage}
-                            alt="Soin des pieds relaxant à domicile"
-                            className="w-full h-[550px] object-cover transform hover:scale-105 transition-transform duration-700"
-                        />
-                    </motion.div>
-                </motion.div>
+                </div>
             </motion.div>
 
-            {/* Scroll Indicator - moved outside the main container */}
+            {/* Scroll Indicator - Hidden on mobile */}
             <motion.div
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 hidden md:block"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2, duration: 0.5 }}
