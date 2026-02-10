@@ -316,65 +316,70 @@ const Gallery = () => {
                                 {/* Close button - Fixed at top right of modal */}
                                 <button
                                     onClick={() => setSelectedWork(null)}
-                                    className="absolute top-4 right-4 z-20 w-10 h-10 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/40 transition-colors"
+                                    className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/50 transition-colors shadow-lg"
                                     aria-label="Fermer"
                                 >
                                     ✕
                                 </button>
 
                                 {/* Scrollable content container */}
-                                <div className="overflow-y-auto custom-scrollbar">
+                                <div className="overflow-y-auto custom-scrollbar flex-1 bg-white">
                                     {/* Image */}
-                                    <div className="relative h-64 md:h-72 w-full flex-shrink-0">
+                                    <div className="relative h-72 md:h-96 w-full flex-shrink-0">
                                         <img
                                             src={selectedWork.image}
                                             alt={selectedWork.title}
                                             className="w-full h-full object-cover"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                                        <div className="absolute bottom-6 left-6 right-6 text-white">
-                                            <h3 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">{selectedWork.title}</h3>
-                                            <p className="text-white/80 text-sm md:text-base">{selectedWork.description}</p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white pt-20">
+                                            <span className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-medium mb-3 border border-white/30">
+                                                {categories.find(c => c.id === selectedWork.category)?.label}
+                                            </span>
+                                            <h3 className="text-2xl md:text-3xl font-bold mb-2 leading-tight">{selectedWork.title}</h3>
+                                            <p className="text-white/90 text-sm md:text-base leading-relaxed">{selectedWork.description}</p>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Testimonial */}
-                                <div className="p-6 md:p-8">
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0">
-                                            <Quote size={20} className="text-white" />
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-700 text-lg italic mb-4">
-                                                "{selectedWork.testimonial.text}"
-                                            </p>
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex">
-                                                    {[...Array(selectedWork.testimonial.rating)].map((_, i) => (
-                                                        <Star key={i} size={18} className="fill-yellow-400 text-yellow-400" />
-                                                    ))}
+                                    {/* Testimonial & Content */}
+                                    <div className="p-6 md:p-10">
+                                        <div className="bg-primary-50/50 rounded-2xl p-6 mb-8 border border-primary-100">
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md text-white">
+                                                    <Quote size={20} />
                                                 </div>
-                                                <span className="font-semibold text-gray-900">{selectedWork.testimonial.name}</span>
+                                                <div>
+                                                    <div className="flex items-center gap-1 mb-2">
+                                                        {[...Array(selectedWork.testimonial.rating)].map((_, i) => (
+                                                            <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                                                        ))}
+                                                    </div>
+                                                    <p className="text-gray-700 text-lg italic mb-3 leading-relaxed">
+                                                        "{selectedWork.testimonial.text}"
+                                                    </p>
+                                                    <div className="font-semibold text-gray-900 border-t border-primary-200/50 pt-2 inline-block">
+                                                        — {selectedWork.testimonial.name}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* CTA */}
-                                    <div className="mt-8 flex flex-col sm:flex-row gap-3 md:gap-4">
-                                        <a
-                                            href="tel:5142387562"
-                                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 md:py-4 rounded-full font-semibold text-center hover:shadow-glow transition-all text-sm md:text-base"
-                                        >
-                                            📞 Appeler Josée
-                                        </a>
-                                        <a
-                                            href="#contact"
-                                            onClick={() => setSelectedWork(null)}
-                                            className="flex-1 glass py-3 md:py-4 rounded-full font-semibold text-center text-primary-600 hover:shadow-md transition-all text-sm md:text-base"
-                                        >
-                                            ✉️ Me contacter
-                                        </a>
+                                        {/* CTA */}
+                                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                                            <a
+                                                href="tel:5142387562"
+                                                className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-6 rounded-xl font-bold text-center hover:shadow-glow transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                            >
+                                                <span>📞</span> Appeler Josée
+                                            </a>
+                                            <a
+                                                href="#contact"
+                                                onClick={() => setSelectedWork(null)}
+                                                className="flex-1 bg-white border-2 border-primary-100 text-primary-700 py-4 px-6 rounded-xl font-bold text-center hover:bg-primary-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                            >
+                                                <span>📅</span> Prendre Rendez-vous
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
