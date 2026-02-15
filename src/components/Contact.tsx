@@ -122,13 +122,13 @@ const Contact = () => {
                         className="inline-block py-2 px-4 rounded-full glass text-primary-600 font-medium tracking-wider uppercase text-sm mb-4"
                         whileHover={{ scale: 1.05 }}
                     >
-                        💬 Contact
+                        Contactez-nous
                     </motion.span>
                     <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mt-2 mb-4">
-                        Prenez <span className="text-gradient">rendez-vous</span>
+                        Une <span className="text-gradient">question?</span>
                     </h2>
                     <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                        Prêt pour un soin à domicile ? Contactez-moi par téléphone ou remplissez le formulaire ci-dessous.
+                        Vous avez une question sur nos soins? Ecrivez-nous ou appelez-nous, on vous repond avec plaisir!
                     </p>
                 </motion.div>
 
@@ -202,7 +202,7 @@ const Contact = () => {
                     >
                         <div className="glass rounded-3xl p-8 md:p-10 relative overflow-hidden">
                             <h3 className="text-2xl font-serif text-gray-900 mb-8">
-                                Demande de <span className="text-gradient">rendez-vous</span>
+                                Envoyez-nous un <span className="text-gradient">message</span>
                             </h3>
 
                             {/* Status Message */}
