@@ -6,10 +6,10 @@ const BookingPage = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-rose-50">
+        <div className="h-screen flex flex-col bg-gradient-to-br from-primary-50 via-white to-rose-50 overflow-hidden">
             {/* Header Bar */}
-            <div className="glass sticky top-0 z-50 shadow-glass">
-                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="glass z-50 shadow-glass flex-shrink-0">
+                <div className="container mx-auto px-4 py-3 flex items-center justify-between">
                     <motion.button
                         onClick={() => navigate('/')}
                         className="flex items-center gap-2 text-primary-700 font-medium hover:text-primary-900 transition-colors"
@@ -36,40 +36,17 @@ const BookingPage = () => {
                 </div>
             </div>
 
-            {/* Page Title */}
-            <div className="container mx-auto px-4 pt-8 pb-4 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-2">
-                        Prendre <span className="text-gradient">rendez-vous</span>
-                    </h1>
-                    <p className="text-gray-600 max-w-lg mx-auto">
-                        Choisissez la date et l'heure qui vous conviennent pour votre soin a domicile.
-                    </p>
-                </motion.div>
+            {/* Calendly Embed - Takes all remaining height */}
+            <div className="flex-1 overflow-hidden">
+                <iframe
+                    src="https://calendly.com/douceurjosee/30min?hide_gdpr_banner=1&background_color=fdf8f4&text_color=1a1a1a&primary_color=c4956a"
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    title="Prendre rendez-vous avec Josee"
+                    style={{ border: 'none' }}
+                />
             </div>
-
-            {/* Calendly Embed */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="container mx-auto px-4 pb-12"
-            >
-                <div className="max-w-4xl mx-auto glass rounded-3xl overflow-hidden shadow-xl">
-                    <iframe
-                        src="https://calendly.com/douceurjosee/30min?hide_gdpr_banner=1&background_color=fdf8f4&text_color=1a1a1a&primary_color=c4956a"
-                        width="100%"
-                        height="750"
-                        frameBorder="0"
-                        title="Prendre rendez-vous avec Josee"
-                        style={{ minHeight: '700px', border: 'none' }}
-                    />
-                </div>
-            </motion.div>
         </div>
     );
 };
