@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Facebook, Phone, MapPin, Heart, ArrowUp, Car } from 'lucide-react';
+import { Facebook, Phone, Mail, MapPin, Heart, ArrowUp, Car } from 'lucide-react';
 
 const Footer = () => {
     const scrollToTop = () => {
@@ -60,6 +60,15 @@ const Footer = () => {
                                     <Phone size={18} />
                                 </div>
                                 <span className="font-medium">514-238-7562</span>
+                            </a>
+                            <a
+                                href="mailto:douceurjosee@gmail.com"
+                                className="flex items-center gap-3 text-primary-200 hover:text-white transition-colors group"
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-primary-700/50 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                                    <Mail size={18} />
+                                </div>
+                                <span className="font-medium">douceurjosee@gmail.com</span>
                             </a>
                             <div className="flex items-center gap-3 text-primary-200">
                                 <div className="w-10 h-10 rounded-xl bg-primary-700/50 flex items-center justify-center">

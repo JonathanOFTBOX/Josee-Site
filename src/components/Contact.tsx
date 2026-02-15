@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Phone, MapPin, Clock, Send, Car, CheckCircle, AlertCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Send, Car, CheckCircle, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZDl6thNG5QL7gCXM7Q7hD45MwrWYX85LRUAorpS0enL4Cli09l18_BarIwL8Uf2qr/exec';
@@ -66,6 +66,14 @@ const Contact = () => {
             value: "514-238-7562",
             href: "tel:5142387562",
             gradient: "from-blue-400 to-indigo-500"
+        },
+        {
+            icon: <Mail size={24} />,
+            title: "Courriel",
+            description: "Écrivez-moi pour toute question.",
+            value: "douceurjosee@gmail.com",
+            href: "mailto:douceurjosee@gmail.com",
+            gradient: "from-rose-400 to-red-500"
         },
         {
             icon: <Car size={24} />,
