@@ -1,0 +1,9 @@
+# Robots.txt - Douceur Mains & Pieds Josee
+# Permet a tous les moteurs de recherche d'indexer le site
+
+User-agent: *
+Allow: /
+Disallow:
+
+# Sitemap
+Sitemap: https://douceurjosee.com/sitemap.xml
