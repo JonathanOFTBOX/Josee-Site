@@ -1,11 +1,14 @@
 import { motion } from 'framer-motion';
-import { Calendar, CheckCircle, Sparkles } from 'lucide-react';
+import { Calendar, Sparkles, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Booking = () => {
+    const navigate = useNavigate();
+
     const benefits = [
         { icon: <Calendar size={18} />, text: "Choisissez votre date et heure" },
         { icon: <Sparkles size={18} />, text: "Soins des pieds, ongles et manucure" },
-        { icon: <CheckCircle size={18} />, text: "Confirmation instantanee par courriel" },
+        { icon: <CheckCircle size={18} />, text: "Confirmation par courriel" },
     ];
 
     return (
@@ -18,62 +21,62 @@ const Booking = () => {
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
-                {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-8 md:mb-12"
+                    className="max-w-3xl mx-auto"
                 >
-                    <motion.span
-                        className="inline-block py-2 px-4 rounded-full glass text-primary-600 font-medium tracking-wider uppercase text-xs md:text-sm mb-3 md:mb-4"
-                        whileHover={{ scale: 1.05 }}
-                    >
-                        Rendez-vous en ligne
-                    </motion.span>
-                    <h2 className="text-3xl md:text-5xl font-serif text-gray-900 mt-1 mb-3">
-                        Reservez <span className="text-gradient">votre soin</span>
-                    </h2>
-                    <p className="text-gray-600 max-w-2xl mx-auto text-base md:text-lg mb-6">
-                        Prenez rendez-vous en quelques clics directement ici!
-                    </p>
+                    <div className="glass rounded-3xl p-8 md:p-12 relative overflow-hidden text-center">
+                        {/* Background decoration */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary-100/30 via-transparent to-rose-100/30 -z-10" />
 
-                    {/* Benefits */}
-                    <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mb-4">
-                        {benefits.map((benefit, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 15 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.2 + index * 0.1 }}
-                                className="flex items-center gap-2 text-gray-700 justify-center"
-                            >
-                                <div className="text-primary-500">{benefit.icon}</div>
-                                <span className="text-sm font-medium">{benefit.text}</span>
-                            </motion.div>
-                        ))}
-                    </div>
-                </motion.div>
+                        {/* Icon */}
+                        <motion.div
+                            className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white shadow-glow mx-auto mb-6"
+                            whileHover={{ rotate: 10, scale: 1.1 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        >
+                            <Calendar size={36} />
+                        </motion.div>
 
-                {/* Calendly Embed */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="max-w-4xl mx-auto"
-                >
-                    <div className="glass rounded-3xl overflow-hidden shadow-xl">
-                        <iframe
-                            src="https://calendly.com/douceurjosee/30min?hide_gdpr_banner=1&background_color=fdf8f4&text_color=1a1a1a&primary_color=c4956a"
-                            width="100%"
-                            height="700"
-                            frameBorder="0"
-                            title="Prendre rendez-vous avec Josee"
-                            style={{ minHeight: '650px', border: 'none' }}
-                        />
+                        {/* Title */}
+                        <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">
+                            Prendre <span className="text-gradient">rendez-vous</span>
+                        </h2>
+                        <p className="text-gray-600 max-w-md mx-auto mb-8">
+                            Reservez votre soin en quelques clics. Choisissez la date et l'heure qui vous conviennent!
+                        </p>
+
+                        {/* Benefits */}
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mb-8">
+                            {benefits.map((benefit, index) => (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, y: 15 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.2 + index * 0.1 }}
+                                    className="flex items-center gap-2 text-gray-700 justify-center"
+                                >
+                                    <div className="text-primary-500">{benefit.icon}</div>
+                                    <span className="text-sm font-medium">{benefit.text}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* CTA Button */}
+                        <motion.button
+                            onClick={() => navigate('/rendez-vous')}
+                            className="btn-glow inline-flex items-center gap-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-10 py-5 rounded-full font-semibold shadow-glow text-lg"
+                            whileHover={{ scale: 1.05, y: -3 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <Calendar size={22} />
+                            <span>Choisir une date</span>
+                            <ArrowUpRight size={20} />
+                        </motion.button>
                     </div>
                 </motion.div>
             </div>
