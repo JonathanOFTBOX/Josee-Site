@@ -128,7 +128,7 @@ const Contact = () => {
                         Une <span className="text-gradient">question?</span>
                     </h2>
                     <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                        Vous avez une question sur nos soins? Ecrivez-nous ou appelez-nous, on vous repond avec plaisir!
+                        Vous avez une question sur nos soins? Écrivez-nous ou appelez-nous, on vous répond avec plaisir!
                     </p>
                 </motion.div>
 
@@ -241,6 +241,7 @@ const Contact = () => {
                                             onFocus={() => setFocusedField('name')}
                                             onBlur={() => setFocusedField(null)}
                                             className="input-modern pt-6"
+                                            required
                                         />
                                     </div>
 
@@ -263,6 +264,7 @@ const Contact = () => {
                                             onFocus={() => setFocusedField('phone')}
                                             onBlur={() => setFocusedField(null)}
                                             className="input-modern pt-6"
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -286,6 +288,7 @@ const Contact = () => {
                                         onFocus={() => setFocusedField('address')}
                                         onBlur={() => setFocusedField(null)}
                                         className="input-modern pt-6"
+                                        required
                                     />
                                 </div>
 
@@ -308,6 +311,7 @@ const Contact = () => {
                                         onFocus={() => setFocusedField('message')}
                                         onBlur={() => setFocusedField(null)}
                                         className="input-modern pt-6 resize-none"
+                                        required
                                     />
                                 </div>
 

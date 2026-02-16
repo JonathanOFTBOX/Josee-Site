@@ -85,6 +85,7 @@ const Navbar = () => {
                 <motion.button
                     className="md:hidden text-primary-800 p-2 rounded-xl glass"
                     onClick={() => setIsOpen(!isOpen)}
+                    aria-label="Menu de navigation"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >

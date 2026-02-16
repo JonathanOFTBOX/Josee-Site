@@ -21,7 +21,7 @@ const BookingPage = () => {
                     </motion.button>
 
                     <span className="font-serif text-lg text-primary-800 hidden sm:block">
-                        Douceur <span className="text-gradient">Mains & Pieds</span> Josee
+                        Douceur <span className="text-gradient">Mains & Pieds</span> Josée
                     </span>
 
                     <motion.a
