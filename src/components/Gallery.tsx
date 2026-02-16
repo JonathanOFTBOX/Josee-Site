@@ -373,8 +373,7 @@ const Gallery = () => {
                                                 <span>📞</span> Appeler Josée
                                             </a>
                                             <a
-                                                href="#contact"
-                                                onClick={() => setSelectedWork(null)}
+                                                href="/rendez-vous"
                                                 className="flex-1 bg-white border-2 border-primary-100 text-primary-700 py-4 px-6 rounded-xl font-bold text-center hover:bg-primary-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                                             >
                                                 <span>📅</span> Prendre Rendez-vous

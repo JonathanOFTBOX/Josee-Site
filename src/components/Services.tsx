@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Scissors, Sparkles, Home, ShieldCheck, ArrowUpRight, Car } from 'lucide-react';
 
+
 const services = [
     {
         icon: <Scissors className="w-7 h-7" />,
@@ -172,7 +173,7 @@ const Services = () => {
                                 </p>
                             </div>
                             <motion.a
-                                href="#contact"
+                                href="/rendez-vous"
                                 className="btn-glow inline-flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-4 rounded-full font-semibold shadow-glow whitespace-nowrap"
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}

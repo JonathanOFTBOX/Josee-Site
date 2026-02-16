@@ -19,7 +19,7 @@ const Navbar = () => {
         { name: 'Services', href: '#services' },
         { name: 'Galerie', href: '#gallery' },
         { name: 'À Propos', href: '#about' },
-        { name: 'Rendez-vous', href: '#booking' },
+        { name: 'Rendez-vous', href: '/rendez-vous' },
         { name: 'Contact', href: '#contact' },
     ];
 
