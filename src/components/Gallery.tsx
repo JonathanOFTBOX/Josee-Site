@@ -324,12 +324,12 @@ const Gallery = () => {
                                                 {categories.find(c => c.id === selectedWork.category)?.label}
                                             </span>
                                             <h3 className="text-2xl md:text-3xl font-bold mb-2 leading-tight">{selectedWork.title}</h3>
-                                            <p className="text-white/90 text-sm md:text-base leading-relaxed">{selectedWork.description}</p>
                                         </div>
                                     </div>
 
-                                    {/* Testimonial & Content */}
+                                    {/* Description & Testimonial */}
                                     <div className="p-6 md:p-10">
+                                        <p className="text-gray-700 text-base leading-relaxed mb-6">{selectedWork.description}</p>
                                         <div className="bg-primary-50/50 rounded-2xl p-6 mb-8 border border-primary-100">
                                             <div className="flex items-start gap-4">
                                                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md text-white">
