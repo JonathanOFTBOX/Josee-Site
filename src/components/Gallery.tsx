@@ -3,11 +3,8 @@ import { Star, Quote } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 // Import real photos from Josée's work
-import realNailsRed from '../assets/images/real-nails-red.jpg';
-import realNailsPearl from '../assets/images/real-nails-pearl.jpg';
 import realNailsRoses from '../assets/images/real-nails-roses.png';
 import realNailsPink from '../assets/images/real-nails-pink.png';
-import realNailsValentine from '../assets/images/real-nails-valentine.jpg';
 import realFootBeforeAfter from '../assets/images/real-foot-before-after.png';
 import realFootCallus from '../assets/images/real-foot-callus.png';
 import realToenailCare from '../assets/images/real-toenail-care.jpg';
@@ -54,30 +51,6 @@ const Gallery = () => {
     const workItems: WorkItem[] = [
         // MANUCURES
         {
-            id: 1,
-            image: realNailsRed,
-            title: "Rouge passion avec nail art",
-            description: "Rouge bordeaux profond avec accents rose et détails dorés. Design créatif et glamour pour les occasions spéciales!",
-            category: 'mains',
-            testimonial: {
-                name: "Sophie M.",
-                text: "Josée a des doigts de fée! Ma manucure était parfaite pour mon mariage. Les petits détails sont tellement élégants! 💕",
-                rating: 5
-            }
-        },
-        {
-            id: 2,
-            image: realNailsPearl,
-            title: "Nacré irisé - Élégance pure",
-            description: "Finition nacrée avec reflets arc-en-ciel. Ongles en amande parfaitement limés. Sophistiqué et discret!",
-            category: 'mains',
-            testimonial: {
-                name: "Isabelle L.",
-                text: "Le fini nacré est magnifique! Ça brille subtilement, parfait pour le bureau et les sorties.",
-                rating: 5
-            }
-        },
-        {
             id: 3,
             image: realNailsRoses,
             title: "Roses peintes à la main 🌹",
@@ -101,24 +74,12 @@ const Gallery = () => {
                 rating: 5
             }
         },
-        {
-            id: 5,
-            image: realNailsValentine,
-            title: "Spécial Saint-Valentin ❤️",
-            description: "Design romantique avec coeurs, french rouge et perles. Parfait pour célébrer l'amour! Nail art créatif et unique.",
-            category: 'mains',
-            testimonial: {
-                name: "Émilie B.",
-                text: "Mon chum a adoré mes ongles de Saint-Valentin! Josée a créé exactement ce que j'avais en tête. Tellement créative!",
-                rating: 5
-            }
-        },
         // SOINS DES PIEDS
         {
             id: 6,
             image: realFootBeforeAfter,
             title: "Transformation callosités",
-            description: "La zone sous le pied est nettement plus lisse, hydratée et confortable en une seule séance!",
+            description: "Élimination des peaux mortes et callosités. Pieds hydratés et prêts pour l'été. Résultat visible immédiatement!",
             category: 'pieds',
             testimonial: {
                 name: "Marie-Claire D.",
@@ -130,7 +91,7 @@ const Gallery = () => {
             id: 7,
             image: realFootCallus,
             title: "Soin complet - Avant/Après",
-            description: "Élimination des peaux mortes et callosités. Pieds hydratés et prêts pour l'été. Résultat visible immédiatement!",
+            description: "On constate un pied apaisé, des ongles nets et confortables, et une amélioration visible du bien-être général. Ce type de soin est recommandé pour conserver une bonne hygiène podale, prévenir les complications liées au diabète et maintenir une mobilité confortable au quotidien.",
             category: 'pieds',
             testimonial: {
                 name: "Jean-Pierre B.",
