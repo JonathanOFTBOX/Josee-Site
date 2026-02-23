@@ -312,7 +312,7 @@ const Gallery = () => {
                                 {/* Scrollable content container */}
                                 <div className="overflow-y-auto custom-scrollbar flex-1 bg-white">
                                     {/* Image */}
-                                    <div className="relative h-72 md:h-96 w-full flex-shrink-0">
+                                    <div className="relative h-56 md:h-72 w-full flex-shrink-0">
                                         <img
                                             src={selectedWork.image}
                                             alt={selectedWork.title}
@@ -329,8 +329,8 @@ const Gallery = () => {
                                     </div>
 
                                     {/* Testimonial & Content */}
-                                    <div className="p-6 md:p-10">
-                                        <div className="bg-primary-50/50 rounded-2xl p-6 mb-8 border border-primary-100">
+                                    <div className="p-5 md:p-8">
+                                        <div className="bg-primary-50/50 rounded-2xl p-5 mb-6 border border-primary-100">
                                             <div className="flex items-start gap-4">
                                                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md text-white">
                                                     <Quote size={20} />
