@@ -106,7 +106,7 @@ const Gallery = () => {
             description: "Traitement spécialisé pour ongles problématiques. Josée traite avec douceur même les cas les plus difficiles!",
             category: 'pieds',
             testimonial: {
-                name: "Robert G.",
+                name: "Line G.",
                 text: "J'avais honte de mes pieds depuis des années. Maintenant je peux porter des sandales! Merci Josée!",
                 rating: 5
             }
