@@ -87,7 +87,7 @@ const Hero = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2, duration: 0.8 }}
                         >
-                            Vos pieds méritent{' '}
+                            Vos pieds et vos mains méritent{' '}
                             <span className="text-gradient italic">l'excellence</span>
                         </motion.h1>
 
@@ -97,8 +97,8 @@ const Hero = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.8 }}
                         >
-                            Soins podologiques et manucure <strong>à votre domicile</strong>.
-                            Service personnalisé à Saint-Amable et environs (30 km).
+                            Soins podologiques et manucure offerts en espace privé, calme et soigné, ou
+                            {' '}<strong>à votre domicile</strong> (Saint-Amable et les environs, 30 km).
                         </motion.p>
 
                         {/* CTA Buttons - Stacked on mobile */}

@@ -77,16 +77,16 @@ const Contact = () => {
         },
         {
             icon: <Car size={24} />,
-            title: "Service à domicile",
-            description: "Je me déplace chez vous avec tout mon équipement.",
-            value: "100% mobile",
+            title: "Service",
+            description: "En espace privé au local ou à votre domicile.",
+            value: "Local ou à domicile",
             href: null,
             gradient: "from-emerald-400 to-teal-500"
         },
         {
             icon: <MapPin size={24} />,
             title: "Zone de service",
-            description: "Basée à Saint-Amable",
+            description: "229, rue Cardinal à Saint-Amable",
             value: "Rayon de 30 km",
             href: null,
             gradient: "from-purple-400 to-pink-500"

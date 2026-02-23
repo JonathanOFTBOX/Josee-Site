@@ -79,15 +79,19 @@ const About = () => {
 
                         <div className="space-y-4 mb-8 text-left md:text-left">
                             <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-                                Bonjour! Je suis <strong>Josée</strong>, podologue passionnée. Ma mission? <strong>Prendre soin des gens</strong>, un pied à la fois!
+                                Je m'appelle <strong>Josée</strong>, podologue passionnée. Ma mission est de prendre soin des gens, un pied à la fois. J'ai un attachement particulier pour les <strong>personnes âgées</strong>, qui méritent des soins attentifs, sécuritaires et adaptés à leur condition de santé.
                             </p>
 
                             <p className="text-gray-600 leading-relaxed">
-                                J'ai un cœur particulier pour les <strong>personnes âgées</strong>. Elles méritent tellement d'attention et de soins de qualité! C'est pourquoi j'offre des soins podologiques et de manucure adaptés aux besoins spécifiques de chaque personne.
+                                J'offre des soins podologiques personnalisés, axés sur le confort, la prévention et le soulagement, dans une approche douce et respectueuse. Les soins sont prodigués dans un environnement propre, calme et sécuritaire, que ce soit à mon local ou à domicile.
                             </p>
 
                             <p className="text-gray-600 leading-relaxed">
-                                <strong>100% à domicile</strong> — Je me déplace chez vous. Basée à <strong>Saint-Amable</strong>, je couvre un rayon de 30 km.
+                                En complément des soins podologiques, j'offre également un service de manucure professionnelle, axé sur le bien-être et la mise en beauté des mains. Chaque soin est réalisé avec douceur et minutie, en respectant l'état des ongles et les besoins spécifiques de chaque personne.
+                            </p>
+
+                            <p className="text-gray-600 leading-relaxed">
+                                Mon objectif est de vous offrir des soins professionnels tout en favorisant le confort, le bien-être et la confiance.
                             </p>
                         </div>
 

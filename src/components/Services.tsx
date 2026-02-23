@@ -1,36 +1,35 @@
 import { motion } from 'framer-motion';
-import { Scissors, Sparkles, Home, ShieldCheck, ArrowUpRight, Car } from 'lucide-react';
+import { Sparkles, ArrowUpRight, Car, Hand, Footprints } from 'lucide-react';
 
 
 const services = [
     {
-        icon: <Scissors className="w-7 h-7" />,
-        title: "Soin Complet des Pieds",
-        description: "Coupe et entretien des ongles, amincissement des ongles mycosés ou épaissis, réduction des callosités et cors. Tout directement chez vous.",
+        icon: <Footprints className="w-7 h-7" />,
+        title: "Soins de pieds (type podologique)",
+        subtitle: "Axés sur la santé, le confort et la prévention",
+        description: "Soins professionnels visant le nettoyage en profondeur, la coupe et l'entretien sécuritaire des ongles, ainsi que la diminution des callosités sans râpe métallique ni rabot. Chaque soin est personnalisé selon la condition de santé, incluant l'entretien des ongles incarnés ou d'aspect mycosique. Recommandé pour les personnes ayant des besoins spécifiques, des inconforts ou des conditions particulières. L'option vernis est offerte lorsque l'état des ongles le permet.",
+        duration: "1 h 30 à 2 h 30, selon le service choisi",
         gradient: "from-blue-400 to-indigo-500",
         bgLight: "bg-blue-50",
     },
     {
-        icon: <Sparkles className="w-7 h-7" />,
+        icon: <Hand className="w-7 h-7" />,
         title: "Manucure",
-        description: "Soins des mains et des ongles avec finition soignée. Service adapté à tous, incluant les personnes diabétiques.",
+        subtitle: "Beauté et soin des mains",
+        description: "Soin comprenant l'entretien des ongles et des cuticules, suivi de l'application de vernis régulier ou de vernis gel, sur ongles naturels ou sur prothèses. Le soin se termine par une hydratation des mains accompagnée d'un léger massage, pour un moment de détente et de mise en beauté.",
+        duration: "1 h 30 à 3 h, selon le service choisi",
         gradient: "from-purple-400 to-pink-500",
         bgLight: "bg-purple-50",
     },
     {
-        icon: <Home className="w-7 h-7" />,
-        title: "100% À Domicile",
-        description: "Je me déplace directement chez vous avec tout mon équipement professionnel. Confort et commodité garantis.",
-        gradient: "from-emerald-400 to-teal-500",
-        bgLight: "bg-emerald-50",
-    },
-    {
-        icon: <ShieldCheck className="w-7 h-7" />,
-        title: "Soins Diabétiques",
-        description: "Protocoles spécialisés et sécuritaires pour la santé des pieds des personnes diabétiques. Instruments stérilisés.",
+        icon: <Sparkles className="w-7 h-7" />,
+        title: "Pédicure (soin esthétique)",
+        subtitle: "Axée sur la détente et la mise en beauté",
+        description: "Soin de bien-être comprenant la préparation et le nettoyage des pieds, un bain aux cristaux marins, l'exfoliation, le soin des ongles et des cuticules, ainsi que l'application de vernis régulier ou de vernis gel. Le soin se termine par une hydratation et un léger massage.",
+        duration: "environ 1 h 30",
         gradient: "from-rose-400 to-orange-400",
         bgLight: "bg-rose-50",
-    }
+    },
 ];
 
 const containerVariants = {
@@ -80,16 +79,16 @@ const Services = () => {
                         ✨ Nos Services
                     </motion.span>
                     <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mt-2 mb-4">
-                        Soins <span className="text-gradient">à domicile</span>
+                        Soins <span className="text-gradient">professionnels</span>
                     </h2>
                     <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                        Des soins professionnels directement chez vous, adaptés à chaque besoin, prodigués avec expertise et douceur.
+                        Des soins professionnels adaptés à votre condition, offerts avec rigueur et bienveillance. Matériel stérilisé ou à usage unique pour des soins sécuritaires. En espace privé, calme et soigné, ou à votre domicile.
                     </p>
                 </motion.div>
 
                 {/* Services Grid - Bento Style */}
                 <motion.div
-                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
@@ -122,12 +121,22 @@ const Services = () => {
                                 </motion.div>
 
                                 {/* Content */}
-                                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-gradient transition-all">
+                                <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-gradient transition-all">
                                     {service.title}
                                 </h3>
-                                <p className="text-gray-600 leading-relaxed text-sm mb-4">
+                                {service.subtitle && (
+                                    <p className="text-primary-600 font-medium text-sm mb-3 italic">
+                                        {service.subtitle}
+                                    </p>
+                                )}
+                                <p className="text-gray-600 leading-relaxed text-sm mb-3">
                                     {service.description}
                                 </p>
+                                {service.duration && (
+                                    <p className="text-gray-500 text-xs mb-4">
+                                        ⏱ Durée : {service.duration}
+                                    </p>
+                                )}
 
                                 {/* Learn More Link */}
                                 <motion.a
@@ -169,7 +178,7 @@ const Services = () => {
                                     </h3>
                                 </div>
                                 <p className="text-gray-600 max-w-xl">
-                                    Basée à <strong>Saint-Amable</strong>, je me déplace dans un rayon de <strong>30 km</strong> pour vous offrir des soins de qualité dans le confort de votre foyer.
+                                    Je vous accueille dans mon local situé au <strong>229, rue Cardinal à Saint-Amable</strong>, ou je me déplace à votre domicile dans un rayon de <strong>30 km</strong>.
                                 </p>
                             </div>
                             <motion.a

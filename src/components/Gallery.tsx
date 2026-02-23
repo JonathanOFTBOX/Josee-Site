@@ -11,8 +11,10 @@ import realNailsValentine from '../assets/images/real-nails-valentine.jpg';
 import realFootBeforeAfter from '../assets/images/real-foot-before-after.png';
 import realFootCallus from '../assets/images/real-foot-callus.png';
 import realToenailCare from '../assets/images/real-toenail-care.jpg';
-import realSummerReady from '../assets/images/real-summer-ready.jpg';
-import realBeachReady from '../assets/images/real-beach-ready.jpg';
+import photoNailsMariage from '../assets/images/photo-nails-mariage.jpg';
+import photoNailsRougeCoeur from '../assets/images/photo-nails-rouge-coeur.jpg';
+import photoJosee1 from '../assets/images/photo-josee-1.jpg';
+import photoJosee2 from '../assets/images/photo-josee-2.jpg';
 
 interface WorkItem {
     id: number;
@@ -150,25 +152,49 @@ const Gallery = () => {
         },
         {
             id: 9,
-            image: realSummerReady,
-            title: "Prête pour l'été! ☀️",
-            description: "Transformation complète avant la saison estivale. Pieds parfaits pour les sandales et la plage!",
-            category: 'pieds',
+            image: photoNailsMariage,
+            title: "Élégance rose et paillettes ✨",
+            description: "Une manucure soignée dans des tons rose pâle et nude, rehaussée de paillettes argentées et de petits cristaux pour une touche élégante et raffinée. La finition est brillante et impeccable.",
+            category: 'mains',
             testimonial: {
-                name: "Nicole P.",
-                text: "Josée m'a préparée pour l'été! Je peux enfin porter mes sandales préférées sans gêne. Service 5 étoiles!",
+                name: "Catherine L.",
+                text: "Josée a fait de mes mains une véritable oeuvre d'art! Les paillettes sont subtiles et élégantes, parfait pour mon événement!",
                 rating: 5
             }
         },
         {
             id: 10,
-            image: realBeachReady,
-            title: "Pieds de plage 🏖️",
-            description: "Avant/Après spectaculaire! Ongles soignés et pieds parfaits. Travail minutieux et professionnel.",
-            category: 'pieds',
+            image: photoNailsRougeCoeur,
+            title: "Rouge passion et cœurs ❤️",
+            description: "Vernis rouge éclatant avec petits cœurs blancs délicats. Un look audacieux et romantique, appliqué avec précision.",
+            category: 'mains',
             testimonial: {
-                name: "André C.",
-                text: "Ma femme n'en revenait pas de la différence! Josée fait vraiment des miracles. Je recommande à 100%!",
+                name: "Valérie S.",
+                text: "J'adore mes ongles! Le rouge est parfait et les petits cœurs sont tellement mignons. Josée a le souci du détail!",
+                rating: 5
+            }
+        },
+        {
+            id: 11,
+            image: photoJosee1,
+            title: "Nacré doux - Deux mains 🤍",
+            description: "Manucure nacrée aux reflets doux et lumineux. Finition impeccable sur ongles naturels, élégance discrète pour toutes les occasions.",
+            category: 'mains',
+            testimonial: {
+                name: "Diane M.",
+                text: "Le fini nacré est absolument magnifique! Josée prend le temps de bien faire les choses. Je me sens choyée à chaque visite.",
+                rating: 5
+            }
+        },
+        {
+            id: 12,
+            image: photoJosee2,
+            title: "Nacré lumineux - Simplicité raffinée",
+            description: "Vernis nacré délicat sur ongles courts et soignés. Un look naturel et sophistiqué, parfait pour le quotidien.",
+            category: 'mains',
+            testimonial: {
+                name: "Francine T.",
+                text: "Simple mais tellement beau! Josée sait mettre en valeur les mains avec douceur et professionnalisme.",
                 rating: 5
             }
         },
@@ -303,7 +329,7 @@ const Gallery = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+                            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
                             onClick={() => setSelectedWork(null)}
                         >
                             <motion.div
