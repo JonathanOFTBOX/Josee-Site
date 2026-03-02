@@ -91,7 +91,7 @@ const Gallery = () => {
             id: 7,
             image: realFootBeforeAfter,
             title: "Soin complet - Avant/Après",
-            description: "On constate un pied apaisé, des ongles nets et confortables, et une amélioration visible du bien-être général. Ce type de soin est recommandé pour conserver une bonne hygiène podale, prévenir les complications liées au diabète et maintenir une mobilité confortable au quotidien.",
+            description: "Résultat visible : pied apaisé, ongles soignés. Soin idéal pour l'hygiène podale et la prévention diabétique.",
             category: 'pieds',
             testimonial: {
                 name: "Jean-Pierre B.",
@@ -292,7 +292,7 @@ const Gallery = () => {
                                 {/* Close button - Always visible, sticky at top right */}
                                 <button
                                     onClick={() => setSelectedWork(null)}
-                                    className="absolute top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors shadow-lg border border-white/20 text-lg font-bold"
+                                    className="absolute top-6 sm:top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors shadow-lg border border-white/20 text-lg font-bold"
                                     aria-label="Fermer"
                                 >
                                     ✕
