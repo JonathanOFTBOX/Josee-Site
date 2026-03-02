@@ -11,7 +11,7 @@ import realToenailCare from '../assets/images/real-toenail-care.jpg';
 import photoNailsMariage from '../assets/images/photo-nails-mariage.jpg';
 import photoNailsRougeCoeur from '../assets/images/photo-nails-rouge-coeur.jpg';
 import photoJosee1 from '../assets/images/photo-josee-1.jpg';
-import photoJosee2 from '../assets/images/photo-josee-2.jpg';
+
 
 interface WorkItem {
     id: number;
@@ -77,7 +77,7 @@ const Gallery = () => {
         // SOINS DES PIEDS
         {
             id: 6,
-            image: realFootBeforeAfter,
+            image: realFootCallus,
             title: "Transformation callosités",
             description: "Élimination des peaux mortes et callosités. Pieds hydratés et prêts pour l'été. Résultat visible immédiatement!",
             category: 'pieds',
@@ -89,7 +89,7 @@ const Gallery = () => {
         },
         {
             id: 7,
-            image: realFootCallus,
+            image: realFootBeforeAfter,
             title: "Soin complet - Avant/Après",
             description: "On constate un pied apaisé, des ongles nets et confortables, et une amélioration visible du bien-être général. Ce type de soin est recommandé pour conserver une bonne hygiène podale, prévenir les complications liées au diabète et maintenir une mobilité confortable au quotidien.",
             category: 'pieds',
@@ -147,18 +147,7 @@ const Gallery = () => {
                 rating: 5
             }
         },
-        {
-            id: 12,
-            image: photoJosee2,
-            title: "Nacré lumineux - Simplicité raffinée",
-            description: "Vernis nacré délicat sur ongles courts et soignés. Un look naturel et sophistiqué, parfait pour le quotidien.",
-            category: 'mains',
-            testimonial: {
-                name: "Francine T.",
-                text: "Simple mais tellement beau! Josée sait mettre en valeur les mains avec douceur et professionnalisme.",
-                rating: 5
-            }
-        },
+
     ];
 
     const filteredItems = activeCategory === 'all'
@@ -290,20 +279,20 @@ const Gallery = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+                            className="fixed inset-0 z-[60] flex items-center justify-center p-4 pt-16 sm:pt-4 bg-black/80 backdrop-blur-md"
                             onClick={() => setSelectedWork(null)}
                         >
                             <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.8, opacity: 0 }}
-                                className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col relative"
+                                className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[85vh] sm:max-h-[90vh] flex flex-col relative"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                {/* Close button - Fixed at top right of modal */}
+                                {/* Close button - Always visible, sticky at top right */}
                                 <button
                                     onClick={() => setSelectedWork(null)}
-                                    className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/50 transition-colors shadow-lg"
+                                    className="absolute top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors shadow-lg border border-white/20 text-lg font-bold"
                                     aria-label="Fermer"
                                 >
                                     ✕
