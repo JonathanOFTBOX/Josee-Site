@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import { Star, Quote } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -272,95 +273,98 @@ const Gallery = () => {
                     </AnimatePresence>
                 </motion.div>
 
-                {/* Modal for testimonial */}
-                <AnimatePresence>
-                    {selectedWork && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[70] flex items-center justify-center p-4 pt-20 sm:pt-4 bg-black/80 backdrop-blur-md"
-                            onClick={() => setSelectedWork(null)}
-                        >
+                {/* Modal for testimonial - rendered via portal to escape framer-motion stacking context */}
+                {createPortal(
+                    <AnimatePresence>
+                        {selectedWork && (
                             <motion.div
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.8, opacity: 0 }}
-                                className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[85vh] sm:max-h-[90vh] flex flex-col relative"
-                                onClick={(e) => e.stopPropagation()}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 z-[70] flex items-center justify-center p-4 pt-20 sm:pt-4 bg-black/80 backdrop-blur-md"
+                                onClick={() => setSelectedWork(null)}
                             >
-                                {/* Close button - Always visible, sticky at top right */}
-                                <button
-                                    onClick={() => setSelectedWork(null)}
-                                    className="absolute top-4 sm:top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/90 transition-colors shadow-xl ring-2 ring-white/40 text-lg font-bold"
-                                    aria-label="Fermer"
+                                <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[85vh] sm:max-h-[90vh] flex flex-col relative"
+                                    onClick={(e) => e.stopPropagation()}
                                 >
-                                    ✕
-                                </button>
+                                    {/* Close button - Always visible, sticky at top right */}
+                                    <button
+                                        onClick={() => setSelectedWork(null)}
+                                        className="absolute top-4 sm:top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/90 transition-colors shadow-xl ring-2 ring-white/40 text-lg font-bold"
+                                        aria-label="Fermer"
+                                    >
+                                        ✕
+                                    </button>
 
-                                {/* Scrollable content container */}
-                                <div className="overflow-y-auto custom-scrollbar flex-1 bg-white">
-                                    {/* Image */}
-                                    <div className="relative h-56 md:h-72 w-full flex-shrink-0">
-                                        <img
-                                            src={selectedWork.image}
-                                            alt={selectedWork.title}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white pt-20">
-                                            <span className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-medium mb-3 border border-white/30">
-                                                {categories.find(c => c.id === selectedWork.category)?.label}
-                                            </span>
-                                            <h3 className="text-2xl md:text-3xl font-bold mb-2 leading-tight">{selectedWork.title}</h3>
-                                            <p className="text-white/90 text-sm md:text-base leading-relaxed line-clamp-3">{selectedWork.description}</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Testimonial & Content */}
-                                    <div className="p-5 md:p-8">
-                                        <div className="bg-primary-50/50 rounded-2xl p-5 mb-6 border border-primary-100">
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md text-white">
-                                                    <Quote size={20} />
-                                                </div>
-                                                <div>
-                                                    <div className="flex items-center gap-1 mb-2">
-                                                        {[...Array(selectedWork.testimonial.rating)].map((_, i) => (
-                                                            <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                                                        ))}
-                                                    </div>
-                                                    <p className="text-gray-700 text-lg italic mb-3 leading-relaxed">
-                                                        "{selectedWork.testimonial.text}"
-                                                    </p>
-                                                    <div className="font-semibold text-gray-900 border-t border-primary-200/50 pt-2 inline-block">
-                                                        — {selectedWork.testimonial.name}
-                                                    </div>
-                                                </div>
+                                    {/* Scrollable content container */}
+                                    <div className="overflow-y-auto custom-scrollbar flex-1 bg-white">
+                                        {/* Image */}
+                                        <div className="relative h-56 md:h-72 w-full flex-shrink-0">
+                                            <img
+                                                src={selectedWork.image}
+                                                alt={selectedWork.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white pt-20">
+                                                <span className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-medium mb-3 border border-white/30">
+                                                    {categories.find(c => c.id === selectedWork.category)?.label}
+                                                </span>
+                                                <h3 className="text-2xl md:text-3xl font-bold mb-2 leading-tight">{selectedWork.title}</h3>
+                                                <p className="text-white/90 text-sm md:text-base leading-relaxed line-clamp-3">{selectedWork.description}</p>
                                             </div>
                                         </div>
 
-                                        {/* CTA */}
-                                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-                                            <a
-                                                href="tel:5142387562"
-                                                className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-6 rounded-xl font-bold text-center hover:shadow-glow transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-                                            >
-                                                <span>📞</span> Appeler Josée
-                                            </a>
-                                            <a
-                                                href="/rendez-vous"
-                                                className="flex-1 bg-white border-2 border-primary-100 text-primary-700 py-4 px-6 rounded-xl font-bold text-center hover:bg-primary-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-                                            >
-                                                <span>📅</span> Prendre Rendez-vous
-                                            </a>
+                                        {/* Testimonial & Content */}
+                                        <div className="p-5 md:p-8">
+                                            <div className="bg-primary-50/50 rounded-2xl p-5 mb-6 border border-primary-100">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-md text-white">
+                                                        <Quote size={20} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-1 mb-2">
+                                                            {[...Array(selectedWork.testimonial.rating)].map((_, i) => (
+                                                                <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                                                            ))}
+                                                        </div>
+                                                        <p className="text-gray-700 text-lg italic mb-3 leading-relaxed">
+                                                            "{selectedWork.testimonial.text}"
+                                                        </p>
+                                                        <div className="font-semibold text-gray-900 border-t border-primary-200/50 pt-2 inline-block">
+                                                            — {selectedWork.testimonial.name}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* CTA */}
+                                            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                                                <a
+                                                    href="tel:5142387562"
+                                                    className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-6 rounded-xl font-bold text-center hover:shadow-glow transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                                >
+                                                    <span>📞</span> Appeler Josée
+                                                </a>
+                                                <a
+                                                    href="/rendez-vous"
+                                                    className="flex-1 bg-white border-2 border-primary-100 text-primary-700 py-4 px-6 rounded-xl font-bold text-center hover:bg-primary-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                                >
+                                                    <span>📅</span> Prendre Rendez-vous
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             </motion.div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        )}
+                    </AnimatePresence>,
+                    document.body
+                )}
             </div>
         </section>
     );
