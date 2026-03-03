@@ -279,7 +279,7 @@ const Gallery = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[60] flex items-center justify-center p-4 pt-16 sm:pt-4 bg-black/80 backdrop-blur-md"
+                            className="fixed inset-0 z-[70] flex items-center justify-center p-4 pt-20 sm:pt-4 bg-black/80 backdrop-blur-md"
                             onClick={() => setSelectedWork(null)}
                         >
                             <motion.div
@@ -292,7 +292,7 @@ const Gallery = () => {
                                 {/* Close button - Always visible, sticky at top right */}
                                 <button
                                     onClick={() => setSelectedWork(null)}
-                                    className="absolute top-6 sm:top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors shadow-lg border border-white/20 text-lg font-bold"
+                                    className="absolute top-4 sm:top-3 right-3 z-50 w-11 h-11 min-w-[44px] min-h-[44px] bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/90 transition-colors shadow-xl ring-2 ring-white/40 text-lg font-bold"
                                     aria-label="Fermer"
                                 >
                                     ✕
