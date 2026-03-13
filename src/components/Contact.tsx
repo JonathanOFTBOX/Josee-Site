@@ -34,40 +34,24 @@ const Contact = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
-        setSubmitStatus('idle');
 
-        try {
-            // Build the message with all contact info
-            const fullMessage = `Téléphone: ${formData.phone}\nAdresse: ${formData.address}\n\nMessage:\n${formData.message}`;
+        // Show success INSTANTLY (optimistic)
+        const savedData = { ...formData };
+        setSubmitStatus('success');
+        setStatusMessage('Merci! Votre demande a été envoyée. Je vous contacterai sous peu.');
+        setFormData({ name: '', phone: '', address: '', message: '' });
 
-            const params = new URLSearchParams({
-                name: formData.name,
-                email: formData.phone, // Using phone as email field for now
-                message: fullMessage
-            });
+        // Send to Apps Script in the background (silently)
+        const fullMessage = `Téléphone: ${savedData.phone}\nAdresse: ${savedData.address}\n\nMessage:\n${savedData.message}`;
+        const params = new URLSearchParams({
+            name: savedData.name,
+            email: savedData.phone,
+            message: fullMessage
+        });
 
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: params,
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                setSubmitStatus('success');
-                setStatusMessage('Merci! Votre demande a été envoyée. Je vous contacterai sous peu.');
-                setFormData({ name: '', phone: '', address: '', message: '' });
-            } else {
-                throw new Error(result.message || 'Erreur lors de l\'envoi');
-            }
-        } catch (error) {
-            setSubmitStatus('error');
-            setStatusMessage('Une erreur est survenue. Veuillez appeler directement au 514-238-7562.');
+        fetch(SCRIPT_URL, { method: 'POST', body: params }).catch((error) => {
             console.error('Form submission error:', error);
-        } finally {
-            setIsSubmitting(false);
-        }
+        });
     };
 
     const contactInfo = [
