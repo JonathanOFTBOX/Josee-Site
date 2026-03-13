@@ -12,7 +12,6 @@ const Contact = () => {
         message: ''
     });
     const [focusedField, setFocusedField] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [statusMessage, setStatusMessage] = useState('');
 
@@ -314,22 +313,12 @@ const Contact = () => {
                                 {/* Submit Button */}
                                 <motion.button
                                     type="submit"
-                                    disabled={isSubmitting}
-                                    className="btn-glow w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold py-4 rounded-2xl shadow-glow flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
-                                    whileHover={!isSubmitting ? { scale: 1.02, y: -2 } : {}}
-                                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                                    className="btn-glow w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold py-4 rounded-2xl shadow-glow flex items-center justify-center gap-3"
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
-                                    {isSubmitting ? (
-                                        <>
-                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                            <span>Envoi en cours...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Send size={20} />
-                                            <span>Envoyer ma demande</span>
-                                        </>
-                                    )}
+                                    <Send size={20} />
+                                    <span>Envoyer ma demande</span>
                                 </motion.button>
                             </form>
                         </div>
