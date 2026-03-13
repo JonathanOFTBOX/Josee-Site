@@ -120,7 +120,7 @@ const About = () => {
                         {/* CTA */}
                         <div className="text-center lg:text-left">
                             <motion.a
-                                href="#contact"
+                                href="/rendez-vous"
                                 className="btn-glow inline-flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-4 rounded-full font-semibold shadow-glow"
                                 whileTap={{ scale: 0.98 }}
                             >

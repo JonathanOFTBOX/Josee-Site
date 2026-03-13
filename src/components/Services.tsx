@@ -140,7 +140,7 @@ const Services = () => {
 
                                 {/* Learn More Link */}
                                 <motion.a
-                                    href="#contact"
+                                    href="/rendez-vous"
                                     className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 opacity-0 group-hover:opacity-100 transition-opacity"
                                     whileHover={{ x: 4 }}
                                 >
