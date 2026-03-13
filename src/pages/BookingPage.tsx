@@ -265,13 +265,13 @@ const BookingPage = () => {
     const accentGradient = isLocal ? 'from-primary-500 to-primary-600' : 'from-emerald-500 to-teal-600';
     const accentText = isLocal ? 'text-primary-600' : 'text-emerald-600';
 
-    // Color classes per category
+    // Color classes per category — matching Services page gradients
     const getCatColors = (catId: string) => {
         switch (catId) {
-            case 'podologie': return { bg: 'bg-blue-50', border: 'border-blue-300', selected: 'bg-blue-100 border-blue-400', text: 'text-indigo-700', badge: 'bg-indigo-500' };
-            case 'pedicure': return { bg: 'bg-rose-50', border: 'border-rose-300', selected: 'bg-rose-100 border-rose-400', text: 'text-rose-700', badge: 'bg-rose-500' };
-            case 'manucure': return { bg: 'bg-purple-50', border: 'border-purple-300', selected: 'bg-purple-100 border-purple-400', text: 'text-pink-700', badge: 'bg-pink-500' };
-            default: return { bg: 'bg-gray-50', border: 'border-gray-300', selected: 'bg-gray-100 border-gray-400', text: 'text-gray-700', badge: 'bg-gray-500' };
+            case 'podologie': return { bg: 'bg-blue-50', border: 'border-blue-300', selected: 'bg-gradient-to-r from-blue-400 to-indigo-500 border-transparent', selectedText: 'text-white', text: 'text-indigo-700', badge: 'bg-white/30', badgeText: 'text-white' };
+            case 'pedicure': return { bg: 'bg-rose-50', border: 'border-rose-300', selected: 'bg-gradient-to-r from-rose-400 to-orange-400 border-transparent', selectedText: 'text-white', text: 'text-rose-700', badge: 'bg-white/30', badgeText: 'text-white' };
+            case 'manucure': return { bg: 'bg-purple-50', border: 'border-purple-300', selected: 'bg-gradient-to-r from-purple-400 to-pink-500 border-transparent', selectedText: 'text-white', text: 'text-pink-700', badge: 'bg-white/30', badgeText: 'text-white' };
+            default: return { bg: 'bg-gray-50', border: 'border-gray-300', selected: 'bg-gray-100 border-gray-400', selectedText: 'text-gray-900', text: 'text-gray-700', badge: 'bg-gray-500', badgeText: 'text-white' };
         }
     };
 
@@ -495,22 +495,22 @@ const BookingPage = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => setExpandedCategory(isExpanded ? null : cat.id)}
-                                                        className={`w-full flex items-center justify-between p-4 transition-colors ${
-                                                            hasSelectedInCat ? colors.selected : 'hover:bg-gray-50'
+                                                        className={`w-full flex items-center justify-between p-4 transition-all rounded-xl ${
+                                                            hasSelectedInCat ? `${colors.selected} shadow-lg` : 'hover:bg-gray-50'
                                                         }`}
                                                     >
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-2xl">{cat.icon}</span>
-                                                            <span className="font-semibold text-gray-900">{cat.name}</span>
+                                                            <span className={`font-semibold ${hasSelectedInCat ? 'text-white' : 'text-gray-900'}`}>{cat.name}</span>
                                                             {hasSelectedInCat && (
-                                                                <span className={`${colors.badge} text-white text-xs px-2 py-0.5 rounded-full`}>
+                                                                <span className={`${colors.badge} ${colors.badgeText} text-xs px-2 py-0.5 rounded-full font-medium`}>
                                                                     ✓ Sélectionné
                                                                 </span>
                                                             )}
                                                         </div>
                                                         <ChevronDown
                                                             size={20}
-                                                            className={`text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                                            className={`${hasSelectedInCat ? 'text-white/70' : 'text-gray-400'} transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                                                         />
                                                     </button>
 
