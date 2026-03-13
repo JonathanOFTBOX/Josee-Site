@@ -50,13 +50,35 @@ const BookingPage = () => {
     const buildCalendlyUrl = () => {
         const url = new URL(CALENDLY_BASE);
 
-        // Prefill name and email
-        if (formData.name) url.searchParams.set('name', formData.name);
+        // Build a rich name for the calendar title: "Service ClientName Location"
+        // Example: "Manucure Nathalie Mercier Local" or "Pédicure Jonathan Gorce Domicile"
+        const isLocal = location === 'local';
+        const locationLabel = isLocal ? 'Local' : 'Domicile';
+
+        let calendarName = '';
+
+        // Add service names (short versions for calendar title)
+        if (selectedServices.length > 0) {
+            const shortLabels = selectedServices.map(id => {
+                if (id === 'pieds') return 'Podologie';
+                if (id === 'manucure') return 'Manucure';
+                if (id === 'pedicure') return 'Pédicure';
+                return id;
+            });
+            calendarName += shortLabels.join(' et ') + ' ';
+        }
+
+        // Add client name
+        calendarName += formData.name;
+
+        // Add location
+        calendarName += ' ' + locationLabel;
+
+        if (calendarName.trim()) url.searchParams.set('name', calendarName.trim());
         if (formData.email) url.searchParams.set('email', formData.email);
 
         // Build notes with all extra info for Josée
         const noteLines: string[] = [];
-        const isLocal = location === 'local';
 
         if (isLocal) {
             noteLines.push('** SOIN AU LOCAL **');
