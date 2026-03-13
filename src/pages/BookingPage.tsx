@@ -791,7 +791,7 @@ const BookingPage = () => {
                                     isLocal ? 'bg-primary-100 text-primary-700' : 'bg-emerald-100 text-emerald-700'
                                 }`}>
                                     {isLocal ? <MapPin size={16} /> : <Home size={16} />}
-                                    {getServiceLabel()} — {formData.name} — {getTotal()}$
+                                    {isLocal ? 'Local' : 'Domicile'} — {getServiceLabel()} — {formData.name} — {getTotal()}$
                                 </span>
                             </div>
 
