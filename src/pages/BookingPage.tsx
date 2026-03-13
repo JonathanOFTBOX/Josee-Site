@@ -1,13 +1,84 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Phone, MapPin, Home, ArrowRight, Send, User, Mail, Navigation, Sparkles, Hand, Footprints } from 'lucide-react';
+import { ArrowLeft, Phone, MapPin, Home, ArrowRight, Send, User, Mail, Navigation, ChevronDown, Check, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const SERVICE_OPTIONS = [
-    { id: 'pieds', label: 'Soins de pieds', icon: Footprints },
-    { id: 'manucure', label: 'Manucure', icon: Hand },
-    { id: 'pedicure', label: 'Pédicure', icon: Sparkles },
+// ============================================================
+// SERVICE CATALOG — from Price List PDF
+// ============================================================
+
+interface ServiceItem {
+    id: string;
+    name: string;
+    duration: string;
+    price: number;
+    note?: string;
+}
+
+interface ExtraItem {
+    id: string;
+    name: string;
+    price: number;
+    duration?: string;
+}
+
+interface ServiceCategory {
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+    services: ServiceItem[];
+}
+
+const SERVICE_CATEGORIES: ServiceCategory[] = [
+    {
+        id: 'podologie',
+        name: 'Soins podologiques',
+        icon: '🦶',
+        color: 'primary',
+        services: [
+            { id: 'podo-premier', name: 'Premier rendez-vous santé des pieds', duration: '2h à 2h30', price: 90 },
+            { id: 'podo-suivi', name: 'Suivi santé des pieds', duration: '1h30 à 2h', price: 80 },
+        ]
+    },
+    {
+        id: 'pedicure',
+        name: 'Pédicure',
+        icon: '✨',
+        color: 'rose',
+        services: [
+            { id: 'pedi-regulier', name: 'Beauté des pieds — vernis régulier', duration: '1h30', price: 50 },
+            { id: 'pedi-gel', name: 'Beauté des pieds — vernis gel', duration: '1h30', price: 60 },
+        ]
+    },
+    {
+        id: 'manucure',
+        name: 'Manucure',
+        icon: '💅',
+        color: 'violet',
+        services: [
+            { id: 'manu-regulier', name: 'Beauté des mains — vernis régulier', duration: '1h15 à 1h30', price: 40 },
+            { id: 'manu-gel', name: 'Beauté des mains — vernis gel', duration: '1h15 à 1h30', price: 50 },
+            { id: 'manu-recouvrement', name: 'Beauté des mains — recouvrement vernis gel', duration: '2h à 2h15', price: 60 },
+            { id: 'manu-pose', name: "Pose d'ongle gel X — vernis gel", duration: '2h30 à 3h', price: 70 },
+            { id: 'manu-remplissage', name: 'Remplissage — vernis gel', duration: '2h à 2h30', price: 60 },
+        ]
+    }
 ];
+
+const EXTRAS: ExtraItem[] = [
+    { id: 'extra-francais', name: 'Manucure français / babyboomer / nailart', price: 10 },
+    { id: 'extra-massage', name: 'Massage (15 min.)', price: 10, duration: '15 min' },
+    { id: 'extra-exfoliant', name: 'Bain exfoliant (15 min.)', price: 10, duration: '15 min' },
+    { id: 'extra-paraffine', name: 'Paraffine (30 min.)', price: 20, duration: '30 min' },
+    { id: 'extra-sel', name: 'Sel marin (15 min.)', price: 10, duration: '15 min' },
+    { id: 'extra-retrait', name: 'Retrait de vernis gel (30 min.)', price: 10, duration: '30 min' },
+    { id: 'extra-correction', name: 'Correction (30 min.)', price: 12, duration: '30 min' },
+];
+
+// ============================================================
+// COMPONENT
+// ============================================================
 
 type BookingLocation = 'local' | 'domicile' | null;
 type BookingStep = 'choose' | 'local-form' | 'domicile-form' | 'calendly';
@@ -23,7 +94,7 @@ const BookingPage = () => {
     const [location, setLocation] = useState<BookingLocation>(null);
     const [step, setStep] = useState<BookingStep>('choose');
 
-    // Form state (shared for both local and domicile)
+    // Form state
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -33,53 +104,85 @@ const BookingPage = () => {
         postalCode: '',
         message: ''
     });
-    const [selectedServices, setSelectedServices] = useState<string[]>([]);
     const [focusedField, setFocusedField] = useState<string | null>(null);
 
+    // Service selection state
+    const [selectedServices, setSelectedServices] = useState<string[]>([]);
+    const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+    const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+
     const toggleService = (serviceId: string) => {
-        setSelectedServices(prev =>
-            prev.includes(serviceId)
-                ? prev.filter(s => s !== serviceId)
-                : [...prev, serviceId]
-        );
+        setSelectedServices(prev => {
+            if (prev.includes(serviceId)) {
+                return prev.filter(id => id !== serviceId);
+            }
+            // Remove any other service from same category, then add this one
+            const category = SERVICE_CATEGORIES.find(c => c.services.some(s => s.id === serviceId));
+            if (!category) return [...prev, serviceId];
+            const otherCatServiceIds = category.services.map(s => s.id);
+            return [...prev.filter(id => !otherCatServiceIds.includes(id)), serviceId];
+        });
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
+    const toggleExtra = (extraId: string) => {
+        setSelectedExtras(prev =>
+            prev.includes(extraId)
+                ? prev.filter(id => id !== extraId)
+                : [...prev, extraId]
+        );
+    };
+
+    // Get all selected service items
+    const getSelectedServiceItems = (): ServiceItem[] => {
+        const items: ServiceItem[] = [];
+        for (const cat of SERVICE_CATEGORIES) {
+            for (const s of cat.services) {
+                if (selectedServices.includes(s.id)) items.push(s);
+            }
+        }
+        return items;
+    };
+
+    const getTotal = () => {
+        const servicesTotal = getSelectedServiceItems().reduce((sum, s) => sum + s.price, 0);
+        const extrasTotal = selectedExtras.reduce((sum, id) => {
+            const extra = EXTRAS.find(e => e.id === id);
+            return sum + (extra?.price || 0);
+        }, 0);
+        return servicesTotal + extrasTotal;
+    };
+
+    // Get short service labels for calendar title
+    const getServiceLabel = (): string => {
+        const labels = selectedServices.map(id => {
+            if (id.startsWith('podo')) return 'Podologie';
+            if (id.startsWith('pedi')) return 'Pédicure';
+            if (id.startsWith('manu')) return 'Manucure';
+            return '';
+        }).filter(Boolean);
+        return labels.join(' et ');
+    };
+
     // Build Calendly URL with prefilled client info
     const buildCalendlyUrl = () => {
         const url = new URL(CALENDLY_BASE);
-
-        // Build a rich name for the calendar title: "Service ClientName Location"
-        // Example: "Manucure Nathalie Mercier Local" or "Pédicure Jonathan Gorce Domicile"
         const isLocal = location === 'local';
         const locationLabel = isLocal ? 'Local' : 'Domicile';
 
+        // Calendar title: "Service ClientName Location"
         let calendarName = '';
-
-        // Add service names (short versions for calendar title)
-        if (selectedServices.length > 0) {
-            const shortLabels = selectedServices.map(id => {
-                if (id === 'pieds') return 'Podologie';
-                if (id === 'manucure') return 'Manucure';
-                if (id === 'pedicure') return 'Pédicure';
-                return id;
-            });
-            calendarName += shortLabels.join(' et ') + ' ';
-        }
-
-        // Add client name
-        calendarName += formData.name;
-
-        // Add location
-        calendarName += ' ' + locationLabel;
+        const serviceLabel = getServiceLabel();
+        if (serviceLabel) calendarName += serviceLabel + ' ';
+        calendarName += formData.name + ' ' + locationLabel;
 
         if (calendarName.trim()) url.searchParams.set('name', calendarName.trim());
         if (formData.email) url.searchParams.set('email', formData.email);
 
-        // Build notes with all extra info for Josée
+        // Build notes
         const noteLines: string[] = [];
 
         if (isLocal) {
@@ -87,28 +190,33 @@ const BookingPage = () => {
         } else {
             noteLines.push('** SOIN A DOMICILE **');
             const fullAddress = [formData.address, formData.city, formData.postalCode].filter(Boolean).join(', ');
-            if (fullAddress) {
-                noteLines.push('Adresse: ' + fullAddress);
-            }
+            if (fullAddress) noteLines.push('Adresse: ' + fullAddress);
         }
 
-        // Selected services
-        if (selectedServices.length > 0) {
-            const serviceLabels = selectedServices.map(id =>
-                SERVICE_OPTIONS.find(s => s.id === id)?.label || id
-            );
-            noteLines.push('Soin(s): ' + serviceLabels.join(', '));
+        // Service details
+        const serviceItems = getSelectedServiceItems();
+        if (serviceItems.length > 0) {
+            serviceItems.forEach(s => {
+                noteLines.push('Service: ' + s.name + ' (' + s.price + '$)');
+            });
         }
 
-        if (formData.phone) {
-            noteLines.push('Telephone: ' + formData.phone);
+        // Extras
+        if (selectedExtras.length > 0) {
+            const extraLabels = selectedExtras.map(id => {
+                const extra = EXTRAS.find(e => e.id === id);
+                return extra ? extra.name + ' +' + extra.price + '$' : '';
+            }).filter(Boolean);
+            noteLines.push('Extras: ' + extraLabels.join(', '));
         }
 
-        if (formData.message) {
-            noteLines.push('Notes: ' + formData.message);
-        }
+        // Total
+        const total = getTotal();
+        if (total > 0) noteLines.push('Total estime: ' + total + '$');
 
-        // a1 = first custom question answer (the "notes" textarea in Calendly)
+        if (formData.phone) noteLines.push('Telephone: ' + formData.phone);
+        if (formData.message) noteLines.push('Notes: ' + formData.message);
+
         if (noteLines.length > 0) {
             url.searchParams.set('a1', noteLines.join('\n'));
         }
@@ -118,7 +226,7 @@ const BookingPage = () => {
 
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // No email sent — just go straight to Calendly with prefilled data
+        if (selectedServices.length === 0) return;
         setStep('calendly');
     };
 
@@ -140,6 +248,8 @@ const BookingPage = () => {
             setLocation(null);
             setFormData({ name: '', phone: '', email: '', address: '', city: '', postalCode: '', message: '' });
             setSelectedServices([]);
+            setSelectedExtras([]);
+            setExpandedCategory(null);
         } else {
             navigate('/');
         }
@@ -151,10 +261,19 @@ const BookingPage = () => {
         return 'Retour au site';
     };
 
-    // Accent colors based on location
     const isLocal = location === 'local';
     const accentGradient = isLocal ? 'from-primary-500 to-primary-600' : 'from-emerald-500 to-teal-600';
     const accentText = isLocal ? 'text-primary-600' : 'text-emerald-600';
+
+    // Color classes per category
+    const getCatColors = (catId: string) => {
+        switch (catId) {
+            case 'podologie': return { bg: 'bg-amber-50', border: 'border-amber-300', selected: 'bg-amber-100 border-amber-400', text: 'text-amber-700', badge: 'bg-amber-500' };
+            case 'pedicure': return { bg: 'bg-rose-50', border: 'border-rose-300', selected: 'bg-rose-100 border-rose-400', text: 'text-rose-700', badge: 'bg-rose-500' };
+            case 'manucure': return { bg: 'bg-violet-50', border: 'border-violet-300', selected: 'bg-violet-100 border-violet-400', text: 'text-violet-700', badge: 'bg-violet-500' };
+            default: return { bg: 'bg-gray-50', border: 'border-gray-300', selected: 'bg-gray-100 border-gray-400', text: 'text-gray-700', badge: 'bg-gray-500' };
+        }
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-primary-50 via-white to-rose-50">
@@ -218,7 +337,6 @@ const BookingPage = () => {
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-6">
-                                {/* Option: Au local */}
                                 <motion.button
                                     onClick={handleChooseLocal}
                                     className="group glass rounded-3xl p-8 text-left hover:shadow-glow transition-all relative overflow-hidden"
@@ -234,13 +352,8 @@ const BookingPage = () => {
                                             <MapPin size={28} />
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 mb-2">Au local</h3>
-                                        <p className="text-gray-600 mb-4">
-                                            229, rue Cardinal<br />
-                                            Saint-Amable, QC J0L 1N0
-                                        </p>
-                                        <p className="text-gray-500 text-sm mb-4">
-                                            Espace privé, calme et soigné
-                                        </p>
+                                        <p className="text-gray-600 mb-4">229, rue Cardinal<br />Saint-Amable, QC J0L 1N0</p>
+                                        <p className="text-gray-500 text-sm mb-4">Espace privé, calme et soigné</p>
                                         <div className="flex items-center gap-2 text-primary-600 font-semibold">
                                             <span>Choisir cette option</span>
                                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -248,7 +361,6 @@ const BookingPage = () => {
                                     </div>
                                 </motion.button>
 
-                                {/* Option: À domicile */}
                                 <motion.button
                                     onClick={handleChooseDomicile}
                                     className="group glass rounded-3xl p-8 text-left hover:shadow-glow transition-all relative overflow-hidden"
@@ -264,13 +376,8 @@ const BookingPage = () => {
                                             <Home size={28} />
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 mb-2">À domicile</h3>
-                                        <p className="text-gray-600 mb-4">
-                                            Je me déplace chez vous<br />
-                                            dans un rayon de 30 km
-                                        </p>
-                                        <p className="text-gray-500 text-sm mb-4">
-                                            Confort de votre foyer
-                                        </p>
+                                        <p className="text-gray-600 mb-4">Je me déplace chez vous<br />dans un rayon de 30 km</p>
+                                        <p className="text-gray-500 text-sm mb-4">Confort de votre foyer</p>
                                         <div className="flex items-center gap-2 text-emerald-600 font-semibold">
                                             <span>Choisir cette option</span>
                                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -291,14 +398,14 @@ const BookingPage = () => {
                     )}
 
                     {(step === 'local-form' || step === 'domicile-form') && (
-                        /* ===== STEP 2: Contact form (local or domicile) ===== */
+                        /* ===== STEP 2: Form + Service Selection ===== */
                         <motion.div
                             key={step}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.4 }}
-                            className="max-w-2xl w-full"
+                            className="max-w-2xl w-full pb-8"
                         >
                             {/* Header */}
                             <div className="text-center mb-8">
@@ -314,11 +421,11 @@ const BookingPage = () => {
                                     Soin <span className="text-gradient">{isLocal ? 'au local' : 'à domicile'}</span>
                                 </h2>
                                 <p className="text-gray-500">
-                                    Remplissez vos informations, puis choisissez votre date de rendez-vous
+                                    Choisissez votre soin et remplissez vos informations
                                 </p>
                             </div>
 
-                            {/* Google Maps card — only for local */}
+                            {/* Google Maps — local only */}
                             {isLocal && (
                                 <motion.div
                                     className="glass rounded-3xl overflow-hidden mb-6"
@@ -326,7 +433,7 @@ const BookingPage = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.15 }}
                                 >
-                                    <div className="w-full h-[200px] md:h-[250px]">
+                                    <div className="w-full h-[180px] md:h-[220px]">
                                         <iframe
                                             src={GOOGLE_MAPS_EMBED}
                                             width="100%"
@@ -338,280 +445,339 @@ const BookingPage = () => {
                                             title="229 rue Cardinal, Saint-Amable"
                                         />
                                     </div>
-                                    <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                    <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                                         <div className="flex items-start gap-3 flex-1">
                                             <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 flex-shrink-0">
                                                 <MapPin size={20} />
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-gray-900">Douceur Mains & Pieds Josée</h3>
-                                                <p className="text-gray-500 text-sm">{LOCAL_ADDRESS}</p>
+                                                <h3 className="font-bold text-gray-900 text-sm">Douceur Mains & Pieds Josée</h3>
+                                                <p className="text-gray-500 text-xs">{LOCAL_ADDRESS}</p>
                                             </div>
                                         </div>
                                         <motion.a
                                             href={GOOGLE_MAPS_DIRECTIONS}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 px-5 rounded-xl shadow-md text-sm whitespace-nowrap"
+                                            className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md text-sm whitespace-nowrap"
                                             whileHover={{ scale: 1.03 }}
                                             whileTap={{ scale: 0.97 }}
                                         >
-                                            <Navigation size={16} />
+                                            <Navigation size={14} />
                                             <span>Itinéraire</span>
                                         </motion.a>
                                     </div>
                                 </motion.div>
                             )}
 
-                            {/* Contact Form Card */}
-                            <motion.div
-                                className="glass rounded-3xl p-6 md:p-8 relative overflow-hidden"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: isLocal ? 0.3 : 0.2 }}
-                            >
-                                <form className="space-y-5" onSubmit={handleFormSubmit}>
-                                    {/* Name */}
-                                    <div className="relative">
-                                        <motion.label
-                                            htmlFor="name"
-                                            className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'name' || formData.name
-                                                ? `top-2 text-xs ${accentText} font-medium`
-                                                : 'top-4 text-gray-500'
-                                                }`}
+                            <form onSubmit={handleFormSubmit}>
+                                {/* ===== SERVICE SELECTION ===== */}
+                                <motion.div
+                                    className="glass rounded-3xl p-5 md:p-6 mb-6"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                >
+                                    <h3 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
+                                        💆‍♀️ Choisissez votre soin
+                                    </h3>
+
+                                    {/* Categories accordion */}
+                                    <div className="space-y-3">
+                                        {SERVICE_CATEGORIES.map((cat) => {
+                                            const colors = getCatColors(cat.id);
+                                            const isExpanded = expandedCategory === cat.id;
+                                            const hasSelectedInCat = cat.services.some(s => selectedServices.includes(s.id));
+
+                                            return (
+                                                <div key={cat.id} className="rounded-2xl border-2 border-gray-100 overflow-hidden">
+                                                    {/* Category header */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setExpandedCategory(isExpanded ? null : cat.id)}
+                                                        className={`w-full flex items-center justify-between p-4 transition-colors ${
+                                                            hasSelectedInCat ? colors.selected : 'hover:bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-2xl">{cat.icon}</span>
+                                                            <span className="font-semibold text-gray-900">{cat.name}</span>
+                                                            {hasSelectedInCat && (
+                                                                <span className={`${colors.badge} text-white text-xs px-2 py-0.5 rounded-full`}>
+                                                                    ✓ Sélectionné
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <ChevronDown
+                                                            size={20}
+                                                            className={`text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                                        />
+                                                    </button>
+
+                                                    {/* Services list */}
+                                                    <AnimatePresence>
+                                                        {isExpanded && (
+                                                            <motion.div
+                                                                initial={{ height: 0, opacity: 0 }}
+                                                                animate={{ height: 'auto', opacity: 1 }}
+                                                                exit={{ height: 0, opacity: 0 }}
+                                                                transition={{ duration: 0.25 }}
+                                                                className="overflow-hidden"
+                                                            >
+                                                                <div className="px-4 pb-4 space-y-2">
+                                                                    {cat.services.map((service) => {
+                                                                        const isSelected = selectedServices.includes(service.id);
+                                                                        return (
+                                                                            <button
+                                                                                key={service.id}
+                                                                                type="button"
+                                                                                onClick={() => toggleService(service.id)}
+                                                                                className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all text-left ${
+                                                                                    isSelected
+                                                                                        ? `${colors.selected} ${colors.border}`
+                                                                                        : 'border-gray-100 hover:border-gray-200 bg-white'
+                                                                                }`}
+                                                                            >
+                                                                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                                                                        isSelected
+                                                                                            ? `${colors.badge} border-transparent text-white`
+                                                                                            : 'border-gray-300'
+                                                                                    }`}>
+                                                                                        {isSelected && <Check size={14} />}
+                                                                                    </div>
+                                                                                    <div className="min-w-0">
+                                                                                        <p className={`font-medium text-sm ${isSelected ? colors.text : 'text-gray-800'}`}>
+                                                                                            {service.name}
+                                                                                        </p>
+                                                                                        <p className="text-xs text-gray-400">{service.duration}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <span className={`font-bold text-lg flex-shrink-0 ml-3 ${isSelected ? colors.text : 'text-gray-900'}`}>
+                                                                                    {service.price}$
+                                                                                </span>
+                                                                            </button>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Extras */}
+                                    {selectedServices.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="mt-5 pt-5 border-t border-gray-100"
                                         >
-                                            <span className="flex items-center gap-1">
-                                                <User size={12} />
-                                                Nom complet *
-                                            </span>
-                                        </motion.label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            onFocus={() => setFocusedField('name')}
-                                            onBlur={() => setFocusedField(null)}
-                                            className="input-modern pt-6"
-                                            required
-                                        />
-                                    </div>
+                                            <h4 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-2">
+                                                <Plus size={16} />
+                                                Extras optionnels
+                                            </h4>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                {EXTRAS.map((extra) => {
+                                                    const isSelected = selectedExtras.includes(extra.id);
+                                                    return (
+                                                        <button
+                                                            key={extra.id}
+                                                            type="button"
+                                                            onClick={() => toggleExtra(extra.id)}
+                                                            className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all text-left text-sm ${
+                                                                isSelected
+                                                                    ? 'border-primary-300 bg-primary-50 text-primary-700'
+                                                                    : 'border-gray-100 bg-white text-gray-600 hover:border-gray-200'
+                                                            }`}
+                                                        >
+                                                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                                                                <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
+                                                                    isSelected
+                                                                        ? 'bg-primary-500 text-white'
+                                                                        : 'border-2 border-gray-300'
+                                                                }`}>
+                                                                    {isSelected && <Check size={12} />}
+                                                                </div>
+                                                                <span className="truncate">{extra.name}</span>
+                                                            </div>
+                                                            <span className={`font-bold flex-shrink-0 ml-2 ${isSelected ? 'text-primary-600' : 'text-gray-500'}`}>
+                                                                +{extra.price}$
+                                                            </span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </motion.div>
+                                    )}
 
-                                    {/* Phone + Email row */}
-                                    <div className="grid sm:grid-cols-2 gap-5">
+                                    {/* Total */}
+                                    {selectedServices.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className="mt-5 pt-4 border-t-2 border-gray-100 flex items-center justify-between"
+                                        >
+                                            <span className="text-gray-600 font-medium">Total estimé</span>
+                                            <span className="text-3xl font-bold text-gray-900">{getTotal()}$</span>
+                                        </motion.div>
+                                    )}
+                                </motion.div>
+
+                                {/* ===== CONTACT INFO ===== */}
+                                <motion.div
+                                    className="glass rounded-3xl p-5 md:p-6 mb-6"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                >
+                                    <h3 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
+                                        📝 Vos informations
+                                    </h3>
+
+                                    <div className="space-y-4">
+                                        {/* Name */}
                                         <div className="relative">
                                             <motion.label
-                                                htmlFor="phone"
-                                                className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'phone' || formData.phone
+                                                htmlFor="name"
+                                                className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'name' || formData.name
                                                     ? `top-2 text-xs ${accentText} font-medium`
                                                     : 'top-4 text-gray-500'
                                                     }`}
                                             >
                                                 <span className="flex items-center gap-1">
-                                                    <Phone size={12} />
-                                                    Téléphone *
+                                                    <User size={12} />
+                                                    Nom complet *
                                                 </span>
                                             </motion.label>
-                                            <input
-                                                type="tel"
-                                                id="phone"
-                                                value={formData.phone}
-                                                onChange={handleChange}
-                                                onFocus={() => setFocusedField('phone')}
-                                                onBlur={() => setFocusedField(null)}
-                                                className="input-modern pt-6"
-                                                required
-                                            />
+                                            <input type="text" id="name" value={formData.name} onChange={handleChange}
+                                                onFocus={() => setFocusedField('name')} onBlur={() => setFocusedField(null)}
+                                                className="input-modern pt-6" required />
                                         </div>
 
-                                        <div className="relative">
-                                            <motion.label
-                                                htmlFor="email"
-                                                className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'email' || formData.email
-                                                    ? `top-2 text-xs ${accentText} font-medium`
-                                                    : 'top-4 text-gray-500'
-                                                    }`}
-                                            >
-                                                <span className="flex items-center gap-1">
-                                                    <Mail size={12} />
-                                                    Courriel *
-                                                </span>
-                                            </motion.label>
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                                onFocus={() => setFocusedField('email')}
-                                                onBlur={() => setFocusedField(null)}
-                                                className="input-modern pt-6"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Address fields — only for domicile */}
-                                    {!isLocal && (
-                                        <>
-                                            {/* Street address */}
+                                        {/* Phone + Email */}
+                                        <div className="grid sm:grid-cols-2 gap-4">
                                             <div className="relative">
                                                 <motion.label
-                                                    htmlFor="address"
-                                                    className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'address' || formData.address
+                                                    htmlFor="phone"
+                                                    className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'phone' || formData.phone
                                                         ? `top-2 text-xs ${accentText} font-medium`
                                                         : 'top-4 text-gray-500'
                                                         }`}
                                                 >
-                                                    <span className="flex items-center gap-1">
-                                                        <MapPin size={12} />
-                                                        Adresse (numéro et rue) *
-                                                    </span>
+                                                    <span className="flex items-center gap-1"><Phone size={12} /> Téléphone *</span>
                                                 </motion.label>
-                                                <input
-                                                    type="text"
-                                                    id="address"
-                                                    value={formData.address}
-                                                    onChange={handleChange}
-                                                    onFocus={() => setFocusedField('address')}
-                                                    onBlur={() => setFocusedField(null)}
-                                                    className="input-modern pt-6"
-                                                    required
-                                                />
+                                                <input type="tel" id="phone" value={formData.phone} onChange={handleChange}
+                                                    onFocus={() => setFocusedField('phone')} onBlur={() => setFocusedField(null)}
+                                                    className="input-modern pt-6" required />
                                             </div>
-
-                                            {/* City + Postal Code row */}
-                                            <div className="grid sm:grid-cols-2 gap-5">
-                                                <div className="relative">
-                                                    <motion.label
-                                                        htmlFor="city"
-                                                        className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'city' || formData.city
-                                                            ? `top-2 text-xs ${accentText} font-medium`
-                                                            : 'top-4 text-gray-500'
-                                                            }`}
-                                                    >
-                                                        Ville *
-                                                    </motion.label>
-                                                    <input
-                                                        type="text"
-                                                        id="city"
-                                                        value={formData.city}
-                                                        onChange={handleChange}
-                                                        onFocus={() => setFocusedField('city')}
-                                                        onBlur={() => setFocusedField(null)}
-                                                        className="input-modern pt-6"
-                                                        required
-                                                    />
-                                                </div>
-
-                                                <div className="relative">
-                                                    <motion.label
-                                                        htmlFor="postalCode"
-                                                        className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'postalCode' || formData.postalCode
-                                                            ? `top-2 text-xs ${accentText} font-medium`
-                                                            : 'top-4 text-gray-500'
-                                                            }`}
-                                                    >
-                                                        Code postal *
-                                                    </motion.label>
-                                                    <input
-                                                        type="text"
-                                                        id="postalCode"
-                                                        value={formData.postalCode}
-                                                        onChange={handleChange}
-                                                        onFocus={() => setFocusedField('postalCode')}
-                                                        onBlur={() => setFocusedField(null)}
-                                                        className="input-modern pt-6"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
-
-                                    {/* Service Selection */}
-                                    <div>
-                                        <p className={`text-sm font-medium mb-3 ${accentText}`}>
-                                            Type de soin souhaité *
-                                        </p>
-                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                            {SERVICE_OPTIONS.map((service) => {
-                                                const isSelected = selectedServices.includes(service.id);
-                                                const Icon = service.icon;
-                                                return (
-                                                    <motion.button
-                                                        key={service.id}
-                                                        type="button"
-                                                        onClick={() => toggleService(service.id)}
-                                                        className={`flex items-center gap-3 p-4 rounded-2xl border-2 transition-all text-left ${
-                                                            isSelected
-                                                                ? isLocal
-                                                                    ? 'border-primary-400 bg-primary-50 text-primary-700'
-                                                                    : 'border-emerald-400 bg-emerald-50 text-emerald-700'
-                                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                            <div className="relative">
+                                                <motion.label
+                                                    htmlFor="email"
+                                                    className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'email' || formData.email
+                                                        ? `top-2 text-xs ${accentText} font-medium`
+                                                        : 'top-4 text-gray-500'
                                                         }`}
-                                                        whileHover={{ scale: 1.02 }}
-                                                        whileTap={{ scale: 0.98 }}
+                                                >
+                                                    <span className="flex items-center gap-1"><Mail size={12} /> Courriel *</span>
+                                                </motion.label>
+                                                <input type="email" id="email" value={formData.email} onChange={handleChange}
+                                                    onFocus={() => setFocusedField('email')} onBlur={() => setFocusedField(null)}
+                                                    className="input-modern pt-6" required />
+                                            </div>
+                                        </div>
+
+                                        {/* Address fields — domicile only */}
+                                        {!isLocal && (
+                                            <>
+                                                <div className="relative">
+                                                    <motion.label
+                                                        htmlFor="address"
+                                                        className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'address' || formData.address
+                                                            ? `top-2 text-xs ${accentText} font-medium`
+                                                            : 'top-4 text-gray-500'
+                                                            }`}
                                                     >
-                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                                                            isSelected
-                                                                ? isLocal
-                                                                    ? 'bg-primary-500 text-white'
-                                                                    : 'bg-emerald-500 text-white'
-                                                                : 'bg-gray-100 text-gray-400'
-                                                        }`}>
-                                                            <Icon size={20} />
-                                                        </div>
-                                                        <span className="font-medium text-sm">{service.label}</span>
-                                                    </motion.button>
-                                                );
-                                            })}
+                                                        <span className="flex items-center gap-1"><MapPin size={12} /> Adresse (numéro et rue) *</span>
+                                                    </motion.label>
+                                                    <input type="text" id="address" value={formData.address} onChange={handleChange}
+                                                        onFocus={() => setFocusedField('address')} onBlur={() => setFocusedField(null)}
+                                                        className="input-modern pt-6" required />
+                                                </div>
+                                                <div className="grid sm:grid-cols-2 gap-4">
+                                                    <div className="relative">
+                                                        <motion.label
+                                                            htmlFor="city"
+                                                            className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'city' || formData.city
+                                                                ? `top-2 text-xs ${accentText} font-medium`
+                                                                : 'top-4 text-gray-500'
+                                                                }`}
+                                                        >Ville *</motion.label>
+                                                        <input type="text" id="city" value={formData.city} onChange={handleChange}
+                                                            onFocus={() => setFocusedField('city')} onBlur={() => setFocusedField(null)}
+                                                            className="input-modern pt-6" required />
+                                                    </div>
+                                                    <div className="relative">
+                                                        <motion.label
+                                                            htmlFor="postalCode"
+                                                            className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'postalCode' || formData.postalCode
+                                                                ? `top-2 text-xs ${accentText} font-medium`
+                                                                : 'top-4 text-gray-500'
+                                                                }`}
+                                                        >Code postal *</motion.label>
+                                                        <input type="text" id="postalCode" value={formData.postalCode} onChange={handleChange}
+                                                            onFocus={() => setFocusedField('postalCode')} onBlur={() => setFocusedField(null)}
+                                                            className="input-modern pt-6" required />
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {/* Notes */}
+                                        <div className="relative">
+                                            <motion.label
+                                                htmlFor="message"
+                                                className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'message' || formData.message
+                                                    ? `top-2 text-xs ${accentText} font-medium`
+                                                    : 'top-4 text-gray-500'
+                                                    }`}
+                                            >
+                                                Notes ou précisions
+                                            </motion.label>
+                                            <textarea id="message" rows={3} value={formData.message} onChange={handleChange}
+                                                onFocus={() => setFocusedField('message')} onBlur={() => setFocusedField(null)}
+                                                className="input-modern pt-6 resize-none" />
                                         </div>
                                     </div>
+                                </motion.div>
 
-                                    {/* Notes (optional) */}
-                                    <div className="relative">
-                                        <motion.label
-                                            htmlFor="message"
-                                            className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'message' || formData.message
-                                                ? `top-2 text-xs ${accentText} font-medium`
-                                                : 'top-4 text-gray-500'
-                                                }`}
-                                        >
-                                            Notes ou précisions
-                                        </motion.label>
-                                        <textarea
-                                            id="message"
-                                            rows={3}
-                                            value={formData.message}
-                                            onChange={handleChange}
-                                            onFocus={() => setFocusedField('message')}
-                                            onBlur={() => setFocusedField(null)}
-                                            className="input-modern pt-6 resize-none"
-                                        />
-                                    </div>
+                                {/* Submit Button */}
+                                <motion.button
+                                    type="submit"
+                                    disabled={selectedServices.length === 0}
+                                    className={`btn-glow w-full bg-gradient-to-r ${accentGradient} text-white font-semibold py-5 rounded-2xl shadow-lg flex items-center justify-center gap-3 text-lg disabled:opacity-40 disabled:cursor-not-allowed`}
+                                    whileHover={selectedServices.length > 0 ? { scale: 1.02, y: -2 } : {}}
+                                    whileTap={selectedServices.length > 0 ? { scale: 0.98 } : {}}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                >
+                                    <Send size={22} />
+                                    <span>{selectedServices.length > 0 ? `Choisir ma date — ${getTotal()}$` : 'Sélectionnez un soin pour continuer'}</span>
+                                    {selectedServices.length > 0 && <ArrowRight size={20} />}
+                                </motion.button>
 
-                                    {/* Submit Button */}
-                                    <motion.button
-                                        type="submit"
-                                        className={`btn-glow w-full bg-gradient-to-r ${accentGradient} text-white font-semibold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-3`}
-                                        whileHover={{ scale: 1.02, y: -2 }}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        <Send size={20} />
-                                        <span>Choisir ma date de rendez-vous</span>
-                                        <ArrowRight size={18} />
-                                    </motion.button>
-                                </form>
-
-                                <p className="text-center text-gray-400 text-xs mt-4">
+                                <p className="text-center text-gray-400 text-xs mt-3">
                                     Ces informations seront transmises automatiquement lors de votre réservation
                                 </p>
-                            </motion.div>
+                            </form>
                         </motion.div>
                     )}
 
                     {step === 'calendly' && (
-                        /* ===== STEP 3: Calendly embed with prefilled data ===== */
+                        /* ===== STEP 3: Calendly embed ===== */
                         <motion.div
                             key="calendly"
                             initial={{ opacity: 0, y: 20 }}
@@ -620,22 +786,15 @@ const BookingPage = () => {
                             transition={{ duration: 0.4 }}
                             className="w-full h-[calc(100vh-80px)]"
                         >
-                            {/* Location badge */}
                             <div className="text-center mb-4">
                                 <span className={`inline-flex items-center gap-2 py-2 px-4 rounded-full text-sm font-medium ${
-                                    isLocal
-                                        ? 'bg-primary-100 text-primary-700'
-                                        : 'bg-emerald-100 text-emerald-700'
+                                    isLocal ? 'bg-primary-100 text-primary-700' : 'bg-emerald-100 text-emerald-700'
                                 }`}>
                                     {isLocal ? <MapPin size={16} /> : <Home size={16} />}
-                                    {isLocal
-                                        ? 'Au local — 229, rue Cardinal, Saint-Amable'
-                                        : `À domicile — ${formData.name || 'Rayon de 30 km'}`
-                                    }
+                                    {getServiceLabel()} — {formData.name} — {getTotal()}$
                                 </span>
                             </div>
 
-                            {/* Calendly iframe — URL includes prefilled name, email and notes */}
                             <iframe
                                 src={buildCalendlyUrl()}
                                 width="100%"
