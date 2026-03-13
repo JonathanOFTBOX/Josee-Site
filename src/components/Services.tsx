@@ -111,14 +111,13 @@ const Services = () => {
                                     style={{ margin: '-2px' }}
                                 />
 
-                                {/* Emoji Icon */}
-                                <motion.div
-                                    className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br ${service.gradient} shadow-lg`}
-                                    whileHover={{ rotate: 10, scale: 1.1 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <span className="text-2xl">{service.emoji}</span>
-                                </motion.div>
+                                {/* Emoji in white circle - top left decorative */}
+                                <div className="absolute -top-8 -left-8 w-28 h-28 rounded-full bg-white/80 flex items-end justify-end pb-5 pr-5 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                                    <span className="text-3xl">{service.emoji}</span>
+                                </div>
+
+                                {/* Spacer for the circle */}
+                                <div className="h-10 mb-4" />
 
                                 {/* Content */}
                                 <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-gradient transition-all">
@@ -148,8 +147,7 @@ const Services = () => {
                                     <ArrowUpRight size={14} />
                                 </motion.a>
 
-                                {/* Decorative Corner */}
-                                <div className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full ${service.bgLight} opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
+
                             </motion.div>
                         </motion.div>
                     ))}
