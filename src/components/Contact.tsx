@@ -17,7 +17,19 @@ const Contact = () => {
     const [statusMessage, setStatusMessage] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
+        const { id, value } = e.target;
+        if (id === 'phone') {
+            const digits = value.replace(/\D/g, '').slice(0, 10);
+            let formatted = digits;
+            if (digits.length > 3 && digits.length <= 6) {
+                formatted = digits.slice(0, 3) + '-' + digits.slice(3);
+            } else if (digits.length > 6) {
+                formatted = digits.slice(0, 3) + '-' + digits.slice(3, 6) + '-' + digits.slice(6);
+            }
+            setFormData({ ...formData, phone: formatted });
+        } else {
+            setFormData({ ...formData, [id]: value });
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
