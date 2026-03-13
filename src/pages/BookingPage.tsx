@@ -268,9 +268,9 @@ const BookingPage = () => {
     // Color classes per category
     const getCatColors = (catId: string) => {
         switch (catId) {
-            case 'podologie': return { bg: 'bg-amber-50', border: 'border-amber-300', selected: 'bg-amber-100 border-amber-400', text: 'text-amber-700', badge: 'bg-amber-500' };
+            case 'podologie': return { bg: 'bg-blue-50', border: 'border-blue-300', selected: 'bg-blue-100 border-blue-400', text: 'text-indigo-700', badge: 'bg-indigo-500' };
             case 'pedicure': return { bg: 'bg-rose-50', border: 'border-rose-300', selected: 'bg-rose-100 border-rose-400', text: 'text-rose-700', badge: 'bg-rose-500' };
-            case 'manucure': return { bg: 'bg-violet-50', border: 'border-violet-300', selected: 'bg-violet-100 border-violet-400', text: 'text-violet-700', badge: 'bg-violet-500' };
+            case 'manucure': return { bg: 'bg-purple-50', border: 'border-purple-300', selected: 'bg-purple-100 border-purple-400', text: 'text-pink-700', badge: 'bg-pink-500' };
             default: return { bg: 'bg-gray-50', border: 'border-gray-300', selected: 'bg-gray-100 border-gray-400', text: 'text-gray-700', badge: 'bg-gray-500' };
         }
     };
