@@ -786,13 +786,18 @@ const BookingPage = () => {
                             transition={{ duration: 0.4 }}
                             className="w-full h-[calc(100vh-80px)]"
                         >
-                            <div className="text-center mb-4">
-                                <span className={`inline-flex items-center gap-2 py-2 px-4 rounded-full text-sm font-medium ${
+                            <div className="text-center mb-4 px-3">
+                                <div className={`inline-flex flex-col items-center gap-1 py-2.5 px-5 rounded-2xl text-sm font-medium ${
                                     isLocal ? 'bg-primary-100 text-primary-700' : 'bg-emerald-100 text-emerald-700'
                                 }`}>
-                                    {isLocal ? <MapPin size={16} /> : <Home size={16} />}
-                                    {isLocal ? 'Local' : 'Domicile'} — {getServiceLabel()} — {formData.name} — {getTotal()}$
-                                </span>
+                                    <span className="flex items-center gap-1.5">
+                                        {isLocal ? <MapPin size={14} /> : <Home size={14} />}
+                                        {isLocal ? '📍 Local — 229 rue Cardinal, St-Amable' : '🏠 Domicile'}
+                                    </span>
+                                    <span className="text-xs opacity-80">
+                                        {getServiceLabel()} — {formData.name} — {getTotal()}$
+                                    </span>
+                                </div>
                             </div>
 
                             <iframe
