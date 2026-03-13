@@ -1,7 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Phone, MapPin, Home, ArrowRight, Send, User, Mail, Navigation } from 'lucide-react';
+import { ArrowLeft, Phone, MapPin, Home, ArrowRight, Send, User, Mail, Navigation, Sparkles, Hand, Footprints } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+
+const SERVICE_OPTIONS = [
+    { id: 'pieds', label: 'Soins de pieds', icon: Footprints },
+    { id: 'manucure', label: 'Manucure', icon: Hand },
+    { id: 'pedicure', label: 'Pédicure', icon: Sparkles },
+];
 
 type BookingLocation = 'local' | 'domicile' | null;
 type BookingStep = 'choose' | 'local-form' | 'domicile-form' | 'calendly';
@@ -25,7 +31,16 @@ const BookingPage = () => {
         address: '',
         message: ''
     });
+    const [selectedServices, setSelectedServices] = useState<string[]>([]);
     const [focusedField, setFocusedField] = useState<string | null>(null);
+
+    const toggleService = (serviceId: string) => {
+        setSelectedServices(prev =>
+            prev.includes(serviceId)
+                ? prev.filter(s => s !== serviceId)
+                : [...prev, serviceId]
+        );
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -50,6 +65,14 @@ const BookingPage = () => {
             if (formData.address) {
                 noteLines.push('Adresse: ' + formData.address);
             }
+        }
+
+        // Selected services
+        if (selectedServices.length > 0) {
+            const serviceLabels = selectedServices.map(id =>
+                SERVICE_OPTIONS.find(s => s.id === id)?.label || id
+            );
+            noteLines.push('Soin(s): ' + serviceLabels.join(', '));
         }
 
         if (formData.phone) {
@@ -91,6 +114,7 @@ const BookingPage = () => {
             setStep('choose');
             setLocation(null);
             setFormData({ name: '', phone: '', email: '', address: '', message: '' });
+            setSelectedServices([]);
         } else {
             navigate('/');
         }
@@ -429,7 +453,47 @@ const BookingPage = () => {
                                         </div>
                                     )}
 
-                                    {/* Message (optional) */}
+                                    {/* Service Selection */}
+                                    <div>
+                                        <p className={`text-sm font-medium mb-3 ${accentText}`}>
+                                            Type de soin souhaité *
+                                        </p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                            {SERVICE_OPTIONS.map((service) => {
+                                                const isSelected = selectedServices.includes(service.id);
+                                                const Icon = service.icon;
+                                                return (
+                                                    <motion.button
+                                                        key={service.id}
+                                                        type="button"
+                                                        onClick={() => toggleService(service.id)}
+                                                        className={`flex items-center gap-3 p-4 rounded-2xl border-2 transition-all text-left ${
+                                                            isSelected
+                                                                ? isLocal
+                                                                    ? 'border-primary-400 bg-primary-50 text-primary-700'
+                                                                    : 'border-emerald-400 bg-emerald-50 text-emerald-700'
+                                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                                        }`}
+                                                        whileHover={{ scale: 1.02 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                    >
+                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                                                            isSelected
+                                                                ? isLocal
+                                                                    ? 'bg-primary-500 text-white'
+                                                                    : 'bg-emerald-500 text-white'
+                                                                : 'bg-gray-100 text-gray-400'
+                                                        }`}>
+                                                            <Icon size={20} />
+                                                        </div>
+                                                        <span className="font-medium text-sm">{service.label}</span>
+                                                    </motion.button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Notes (optional) */}
                                     <div className="relative">
                                         <motion.label
                                             htmlFor="message"
@@ -438,7 +502,7 @@ const BookingPage = () => {
                                                 : 'top-4 text-gray-500'
                                                 }`}
                                         >
-                                            Type de soin souhaité / Notes
+                                            Notes ou précisions
                                         </motion.label>
                                         <textarea
                                             id="message"
