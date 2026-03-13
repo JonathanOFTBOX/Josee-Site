@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowUpRight, Car, Hand, Footprints } from 'lucide-react';
+import { ArrowUpRight, Car } from 'lucide-react';
+import servicePodologie from '../assets/images/service-podologie.png';
+import serviceManucure from '../assets/images/service-manucure.png';
+import servicePedicure from '../assets/images/service-pedicure.png';
 
 
 const services = [
     {
-        icon: <Footprints className="w-7 h-7" />,
+        image: servicePodologie,
         title: "Soins de pieds (type podologique)",
         subtitle: "Axés sur la santé, le confort et la prévention",
         description: "Soins professionnels visant le nettoyage en profondeur, la coupe et l'entretien sécuritaire des ongles, ainsi que la diminution des callosités sans râpe métallique ni rabot. Chaque soin est personnalisé selon la condition de santé, incluant l'entretien des ongles incarnés ou d'aspect mycosique. Recommandé pour les personnes ayant des besoins spécifiques, des inconforts ou des conditions particulières. L'option vernis est offerte lorsque l'état des ongles le permet.",
@@ -13,7 +16,7 @@ const services = [
         bgLight: "bg-blue-50",
     },
     {
-        icon: <Hand className="w-7 h-7" />,
+        image: serviceManucure,
         title: "Manucure",
         subtitle: "Beauté et soin des mains",
         description: "Soin comprenant l'entretien des ongles et des cuticules, suivi de l'application de vernis régulier ou de vernis gel, sur ongles naturels ou sur prothèses. Le soin se termine par une hydratation des mains accompagnée d'un léger massage, pour un moment de détente et de mise en beauté.",
@@ -22,7 +25,7 @@ const services = [
         bgLight: "bg-purple-50",
     },
     {
-        icon: <Sparkles className="w-7 h-7" />,
+        image: servicePedicure,
         title: "Pédicure (soin esthétique)",
         subtitle: "Axée sur la détente et la mise en beauté",
         description: "Soin de bien-être comprenant la préparation et le nettoyage des pieds, un bain aux cristaux marins, l'exfoliation, le soin des ongles et des cuticules, ainsi que l'application de vernis régulier ou de vernis gel. Le soin se termine par une hydratation et un léger massage.",
@@ -111,14 +114,14 @@ const Services = () => {
                                     style={{ margin: '-2px' }}
                                 />
 
-                                {/* Icon */}
-                                <motion.div
-                                    className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br ${service.gradient} text-white shadow-lg`}
-                                    whileHover={{ rotate: 360, scale: 1.1 }}
-                                    transition={{ duration: 0.6 }}
-                                >
-                                    {service.icon}
-                                </motion.div>
+                                {/* Service Image */}
+                                <div className="w-16 h-16 rounded-2xl overflow-hidden mb-6 shadow-lg flex-shrink-0">
+                                    <img
+                                        src={service.image}
+                                        alt={service.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
 
                                 {/* Content */}
                                 <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-gradient transition-all">
