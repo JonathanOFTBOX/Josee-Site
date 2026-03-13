@@ -29,6 +29,8 @@ const BookingPage = () => {
         phone: '',
         email: '',
         address: '',
+        city: '',
+        postalCode: '',
         message: ''
     });
     const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -84,8 +86,9 @@ const BookingPage = () => {
             noteLines.push('** SOIN AU LOCAL **');
         } else {
             noteLines.push('** SOIN A DOMICILE **');
-            if (formData.address) {
-                noteLines.push('Adresse: ' + formData.address);
+            const fullAddress = [formData.address, formData.city, formData.postalCode].filter(Boolean).join(', ');
+            if (fullAddress) {
+                noteLines.push('Adresse: ' + fullAddress);
             }
         }
 
@@ -135,7 +138,7 @@ const BookingPage = () => {
         } else if (step === 'local-form' || step === 'domicile-form') {
             setStep('choose');
             setLocation(null);
-            setFormData({ name: '', phone: '', email: '', address: '', message: '' });
+            setFormData({ name: '', phone: '', email: '', address: '', city: '', postalCode: '', message: '' });
             setSelectedServices([]);
         } else {
             navigate('/');
@@ -447,32 +450,82 @@ const BookingPage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Address — only for domicile */}
+                                    {/* Address fields — only for domicile */}
                                     {!isLocal && (
-                                        <div className="relative">
-                                            <motion.label
-                                                htmlFor="address"
-                                                className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'address' || formData.address
-                                                    ? `top-2 text-xs ${accentText} font-medium`
-                                                    : 'top-4 text-gray-500'
-                                                    }`}
-                                            >
-                                                <span className="flex items-center gap-1">
-                                                    <MapPin size={12} />
-                                                    Adresse complète *
-                                                </span>
-                                            </motion.label>
-                                            <input
-                                                type="text"
-                                                id="address"
-                                                value={formData.address}
-                                                onChange={handleChange}
-                                                onFocus={() => setFocusedField('address')}
-                                                onBlur={() => setFocusedField(null)}
-                                                className="input-modern pt-6"
-                                                required
-                                            />
-                                        </div>
+                                        <>
+                                            {/* Street address */}
+                                            <div className="relative">
+                                                <motion.label
+                                                    htmlFor="address"
+                                                    className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'address' || formData.address
+                                                        ? `top-2 text-xs ${accentText} font-medium`
+                                                        : 'top-4 text-gray-500'
+                                                        }`}
+                                                >
+                                                    <span className="flex items-center gap-1">
+                                                        <MapPin size={12} />
+                                                        Adresse (numéro et rue) *
+                                                    </span>
+                                                </motion.label>
+                                                <input
+                                                    type="text"
+                                                    id="address"
+                                                    value={formData.address}
+                                                    onChange={handleChange}
+                                                    onFocus={() => setFocusedField('address')}
+                                                    onBlur={() => setFocusedField(null)}
+                                                    className="input-modern pt-6"
+                                                    required
+                                                />
+                                            </div>
+
+                                            {/* City + Postal Code row */}
+                                            <div className="grid sm:grid-cols-2 gap-5">
+                                                <div className="relative">
+                                                    <motion.label
+                                                        htmlFor="city"
+                                                        className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'city' || formData.city
+                                                            ? `top-2 text-xs ${accentText} font-medium`
+                                                            : 'top-4 text-gray-500'
+                                                            }`}
+                                                    >
+                                                        Ville *
+                                                    </motion.label>
+                                                    <input
+                                                        type="text"
+                                                        id="city"
+                                                        value={formData.city}
+                                                        onChange={handleChange}
+                                                        onFocus={() => setFocusedField('city')}
+                                                        onBlur={() => setFocusedField(null)}
+                                                        className="input-modern pt-6"
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div className="relative">
+                                                    <motion.label
+                                                        htmlFor="postalCode"
+                                                        className={`absolute left-5 transition-all duration-300 pointer-events-none z-10 ${focusedField === 'postalCode' || formData.postalCode
+                                                            ? `top-2 text-xs ${accentText} font-medium`
+                                                            : 'top-4 text-gray-500'
+                                                            }`}
+                                                    >
+                                                        Code postal *
+                                                    </motion.label>
+                                                    <input
+                                                        type="text"
+                                                        id="postalCode"
+                                                        value={formData.postalCode}
+                                                        onChange={handleChange}
+                                                        onFocus={() => setFocusedField('postalCode')}
+                                                        onBlur={() => setFocusedField(null)}
+                                                        className="input-modern pt-6"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                        </>
                                     )}
 
                                     {/* Service Selection */}
