@@ -73,13 +73,13 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
 ];
 
 const EXTRAS: ExtraItem[] = [
-    { id: 'extra-francais', name: 'Manucure français / babyboomer / nailart', price: 10 },
-    { id: 'extra-massage', name: 'Massage (15 min.)', price: 10, duration: '15 min' },
-    { id: 'extra-exfoliant', name: 'Bain exfoliant (15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
-    { id: 'extra-paraffine', name: 'Paraffine (30 min.)', price: 20, duration: '30 min' },
-    { id: 'extra-sel', name: 'Sel marin (15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
-    { id: 'extra-retrait', name: 'Retrait de vernis gel (30 min.)', price: 10, duration: '30 min' },
-    { id: 'extra-correction', name: 'Correction (30 min.)', price: 12, duration: '30 min', categories: ['manucure'] },
+    { id: 'extra-francais', name: 'Manucure français / babyboomer / nailart (Mains/Pieds)', price: 10 },
+    { id: 'extra-massage', name: 'Massage (Mains/Pieds - 15 min.)', price: 10, duration: '15 min' },
+    { id: 'extra-exfoliant', name: 'Bain exfoliant (Pieds - 15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
+    { id: 'extra-paraffine', name: 'Paraffine (Mains/Pieds - 30 min.)', price: 20, duration: '30 min' },
+    { id: 'extra-sel', name: 'Sel marin (Pieds - 15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
+    { id: 'extra-retrait', name: 'Retrait de vernis gel (Mains/Pieds - 30 min.)', price: 10, duration: '30 min' },
+    { id: 'extra-correction', name: 'Correction (Mains - 30 min.)', price: 12, duration: '30 min', categories: ['manucure'] },
 ];
 
 // ============================================================
