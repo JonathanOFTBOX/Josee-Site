@@ -543,7 +543,7 @@ const BookingPage = () => {
                                                                 transition={{ duration: 0.25 }}
                                                                 className="overflow-hidden"
                                                             >
-                                                                <div className="px-4 pb-4 space-y-2">
+                                                                <div className="p-4 space-y-2">
                                                                     {cat.services.map((service) => {
                                                                         const isSelected = selectedServices.includes(service.id);
                                                                         return (
