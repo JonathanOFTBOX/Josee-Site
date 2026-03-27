@@ -37,9 +37,9 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
         icon: '🦶',
         color: 'primary',
         services: [
+            { id: 'podo-gel', name: 'Soin podologique avec application de vernis gel', duration: '2h à 2h30', price: 100 },
             { id: 'podo-premier', name: 'Premier rendez-vous santé des pieds', duration: '2h à 2h30', price: 90 },
             { id: 'podo-suivi', name: 'Suivi santé des pieds', duration: '1h30 à 2h', price: 80 },
-            { id: 'podo-gel', name: 'Soin podologique avec application de vernis gel', duration: '2h à 2h30', price: 100 },
         ]
     },
     {
@@ -48,8 +48,8 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
         icon: '✨',
         color: 'rose',
         services: [
-            { id: 'pedi-regulier', name: 'Beauté des pieds — vernis régulier', duration: '1h30', price: 50 },
             { id: 'pedi-gel', name: 'Beauté des pieds — vernis gel', duration: '1h30', price: 60 },
+            { id: 'pedi-regulier', name: 'Beauté des pieds — vernis régulier', duration: '1h30', price: 50 },
         ]
     },
     {
@@ -58,11 +58,11 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
         icon: '💅',
         color: 'violet',
         services: [
-            { id: 'manu-regulier', name: 'Beauté des mains — vernis régulier', duration: '1h15 à 1h30', price: 40 },
-            { id: 'manu-gel', name: 'Beauté des mains — vernis gel', duration: '1h15 à 1h30', price: 50 },
-            { id: 'manu-recouvrement', name: 'Beauté des mains — recouvrement vernis gel', duration: '2h à 2h15', price: 60 },
             { id: 'manu-pose', name: "Pose d'ongle gel X — vernis gel", duration: '2h30 à 3h', price: 70 },
+            { id: 'manu-recouvrement', name: 'Beauté des mains — recouvrement vernis gel', duration: '2h à 2h15', price: 60 },
             { id: 'manu-remplissage', name: 'Remplissage — vernis gel', duration: '2h à 2h30', price: 60 },
+            { id: 'manu-gel', name: 'Beauté des mains — vernis gel', duration: '1h15 à 1h30', price: 50 },
+            { id: 'manu-regulier', name: 'Beauté des mains — vernis régulier', duration: '1h15 à 1h30', price: 40 },
         ]
     }
 ];
