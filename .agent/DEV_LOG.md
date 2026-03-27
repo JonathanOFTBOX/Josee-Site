@@ -30,6 +30,19 @@ Ce fichier trace toutes les interventions réalisées par l'équipe Marcus (Arch
 
 ## Historique
 
+### [FEAT-PODO-001] Ajout Soin Podologique avec vernis gel
+**Date :** 2026-03-27
+**Statut :** 🟢 COMPLÉTÉ
+
+**1. Problème / Demande :**
+Ajouter "soin podologique avec application de vernis gel" à la liste des services.
+
+**2. Analyse et Solution :**
+- `src/pages/BookingPage.tsx` modifié pour ajouter le service avec des valeurs temporaires (100$, 2h à 2h30).
+- `src/components/Services.tsx` vérifié (déjà générique).
+
+---
+
 ### [FEAT-PRIVACY-001] Anonymisation Noms Témoignages
 **Date :** 2026-02-17
 **Statut :** 🟡 À FAIRE

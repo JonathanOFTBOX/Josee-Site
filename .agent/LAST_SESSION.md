@@ -1,8 +1,15 @@
 # Last Session Summary
-**Date:** 2026-02-16 17:50
-**Version:** 1.0.10.738
+**Date:** 2026-03-27 09:50
+**Version:** 0.0.0
 
-## v738 — Employee costRate for job profitability + fix server/storage.ts
+## [FEAT-PODO-001] Ajout Soin Podologique avec vernis gel
+- **NEW**: Ajout de l'option "Soin podologique avec application de vernis gel" dans `src/pages/BookingPage.tsx` sous la catégorie "Soins podologiques".
+- Utilisation de valeurs de prix (100$) et de durée (2h à 2h30) temporaires à confirmer par l'utilisateur.
+- Pas de modification nécessaire dans `src/components/Services.tsx` car la description était déjà générique et incluait l'option vernis.
+
+---
+
+## Previous Session (2026-02-16)## v738 — Employee costRate for job profitability + fix server/storage.ts
 - **NEW**: Added `cost_rate` field to employees — separates "cost to company" from payroll `hourly_rate`
   - DB: `costRate: real("cost_rate").default(0)` in shared/schema.ts
   - API: `SupabaseProfile.cost_rate`, `profileToUser()` mapping, `CreateEmployeePayload.costRate`

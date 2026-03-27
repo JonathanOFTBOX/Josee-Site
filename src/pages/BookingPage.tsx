@@ -39,6 +39,7 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
         services: [
             { id: 'podo-premier', name: 'Premier rendez-vous santé des pieds', duration: '2h à 2h30', price: 90 },
             { id: 'podo-suivi', name: 'Suivi santé des pieds', duration: '1h30 à 2h', price: 80 },
+            { id: 'podo-gel', name: 'Soin podologique avec application de vernis gel', duration: '2h à 2h30', price: 100 },
         ]
     },
     {
