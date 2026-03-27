@@ -30,6 +30,19 @@ Ce fichier trace toutes les interventions réalisées par l'équipe Marcus (Arch
 
 ## Historique
 
+### [FEAT-MENU-001] Mise à jour complète du menu et des extras
+**Date :** 2026-03-27
+**Statut :** 🟢 COMPLÉTÉ
+
+**1. Problème / Demande :**
+Mettre à jour les noms, durées et prix des soins de podologie (`Premier rv...` et `Suivi...`). Retirer "Correction" des extras partout, et masquer "Bain exfoliant" et "Sel marin" pour la catégorie manucure seulement. Ajouter "Soin des mains avec retrait de vernis gel".
+
+**2. Analyse et Solution :**
+- `BookingPage.tsx` : Modification de `ServiceCategory` pour accepter les nouveaux services.
+- `ExtraItem` : Ajout de la clé `categories: ['podologie', 'pedicure']` pour permettre un filtrage contextuel dans le rendu via `.filter()`.
+
+---
+
 ### [FEAT-PODO-001] Ajout Soin Podologique avec vernis gel
 **Date :** 2026-03-27
 **Statut :** 🟢 COMPLÉTÉ

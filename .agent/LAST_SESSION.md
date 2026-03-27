@@ -1,6 +1,14 @@
 # Last Session Summary
-**Date:** 2026-03-27 09:50
+**Date:** 2026-03-27 10:48
 **Version:** 0.0.0
+
+## [FEAT-MENU-001] Mise à jour complète du menu et des extras
+- **UPDATE**: Modification et ajout de soins podologiques (110$, 100$, 90$) selon directives exactes avec durées (2h30-3h, 2h-2h30).
+- **NEW**: Ajout "Soin des mains avec retrait de vernis gel" (30$, 1h-1h30) en manucure.
+- **UX**: Suppression globale de l'extra "Correction".
+- **UX**: Logique de filtrage implémentée : "Bain exfoliant" et "Sel marin" ne s'affichent plus si seule la catégorie Manucure est sélectionnée.
+
+---
 
 ## [FEAT-PODO-001] Ajout Soin Podologique avec vernis gel
 - **NEW**: Ajout de l'option "Soin podologique avec application de vernis gel" dans `src/pages/BookingPage.tsx` sous la catégorie "Soins podologiques".

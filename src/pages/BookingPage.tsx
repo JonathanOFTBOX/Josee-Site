@@ -20,6 +20,7 @@ interface ExtraItem {
     name: string;
     price: number;
     duration?: string;
+    categories?: string[];
 }
 
 interface ServiceCategory {
@@ -37,8 +38,11 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
         icon: '🦶',
         color: 'primary',
         services: [
-            { id: 'podo-gel', name: 'Soin podologique avec application de vernis gel', duration: '2h à 2h30', price: 100 },
+            { id: 'podo-premier-gel', name: 'Premier rv santé et beauté des pieds (application de vernis gel)', duration: '2h30 à 3h', price: 110 },
+            { id: 'podo-premier-regulier', name: 'Premier rv santé et beauté des pieds (application de vernis régulier)', duration: '2h30 à 3h', price: 100 },
+            { id: 'podo-suivi-gel', name: 'Suivi santé et beauté des pieds (application de vernis gel)', duration: '2h à 2h30', price: 100 },
             { id: 'podo-premier', name: 'Premier rendez-vous santé des pieds', duration: '2h à 2h30', price: 90 },
+            { id: 'podo-suivi-regulier', name: 'Suivi santé et beauté des pieds (application de vernis régulier)', duration: '2h à 2h30', price: 90 },
             { id: 'podo-suivi', name: 'Suivi santé des pieds', duration: '1h30 à 2h', price: 80 },
         ]
     },
@@ -63,6 +67,7 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
             { id: 'manu-remplissage', name: 'Remplissage — vernis gel', duration: '2h à 2h30', price: 60 },
             { id: 'manu-gel', name: 'Beauté des mains — vernis gel', duration: '1h15 à 1h30', price: 50 },
             { id: 'manu-regulier', name: 'Beauté des mains — vernis régulier', duration: '1h15 à 1h30', price: 40 },
+            { id: 'manu-soin-retrait', name: 'Soin des mains avec retrait de vernis gel', duration: '1h à 1h30', price: 30 },
         ]
     }
 ];
@@ -70,11 +75,10 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
 const EXTRAS: ExtraItem[] = [
     { id: 'extra-francais', name: 'Manucure français / babyboomer / nailart', price: 10 },
     { id: 'extra-massage', name: 'Massage (15 min.)', price: 10, duration: '15 min' },
-    { id: 'extra-exfoliant', name: 'Bain exfoliant (15 min.)', price: 10, duration: '15 min' },
+    { id: 'extra-exfoliant', name: 'Bain exfoliant (15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
     { id: 'extra-paraffine', name: 'Paraffine (30 min.)', price: 20, duration: '30 min' },
-    { id: 'extra-sel', name: 'Sel marin (15 min.)', price: 10, duration: '15 min' },
+    { id: 'extra-sel', name: 'Sel marin (15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
     { id: 'extra-retrait', name: 'Retrait de vernis gel (30 min.)', price: 10, duration: '30 min' },
-    { id: 'extra-correction', name: 'Correction (30 min.)', price: 12, duration: '30 min' },
 ];
 
 // ============================================================
@@ -594,7 +598,13 @@ const BookingPage = () => {
                                                 Extras optionnels
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                {EXTRAS.map((extra) => {
+                                                {EXTRAS.filter(extra => {
+                                                    if (!extra.categories) return true;
+                                                    const selectedCats = selectedServices
+                                                        .map(sid => SERVICE_CATEGORIES.find(c => c.services.some(s => s.id === sid))?.id)
+                                                        .filter(Boolean);
+                                                    return extra.categories.some(c => selectedCats.includes(c as string));
+                                                }).map((extra) => {
                                                     const isSelected = selectedExtras.includes(extra.id);
                                                     return (
                                                         <button
