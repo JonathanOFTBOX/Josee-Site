@@ -79,6 +79,7 @@ const EXTRAS: ExtraItem[] = [
     { id: 'extra-paraffine', name: 'Paraffine (30 min.)', price: 20, duration: '30 min' },
     { id: 'extra-sel', name: 'Sel marin (15 min.)', price: 10, duration: '15 min', categories: ['podologie', 'pedicure'] },
     { id: 'extra-retrait', name: 'Retrait de vernis gel (30 min.)', price: 10, duration: '30 min' },
+    { id: 'extra-correction', name: 'Correction (30 min.)', price: 12, duration: '30 min', categories: ['manucure'] },
 ];
 
 // ============================================================
