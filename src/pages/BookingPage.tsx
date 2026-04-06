@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Phone, MapPin, Home, ArrowRight, Send, User, Mail, Navigation, ChevronDown, Check, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // ============================================================
 // SERVICE CATALOG — from Price List PDF
@@ -117,6 +117,73 @@ const BookingPage = () => {
     const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
     const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
+    // Detect which body areas (hands/feet) are currently selected
+    const getSelectedAreas = () => {
+        const selectedCats = selectedServices
+            .map(sid => SERVICE_CATEGORIES.find(c => c.services.some(s => s.id === sid))?.id)
+            .filter(Boolean) as string[];
+        const hasFeet = selectedCats.some(c => c === 'podologie' || c === 'pedicure');
+        const hasHands = selectedCats.some(c => c === 'manucure');
+        return { hasFeet, hasHands, hasBoth: hasFeet && hasHands, selectedCats };
+    };
+
+    // Build visible extras — splits dual (Mains/Pieds) extras into separate options when both areas are selected
+    const getVisibleExtras = () => {
+        const { hasBoth, selectedCats } = getSelectedAreas();
+        const result: { id: string; name: string; price: number; duration?: string }[] = [];
+
+        for (const extra of EXTRAS) {
+            if (extra.categories && !extra.categories.some(c => selectedCats.includes(c))) {
+                continue;
+            }
+            const isDual = extra.name.includes('(Mains/Pieds');
+            if (isDual && hasBoth) {
+                // Split into two separate checkboxes
+                result.push({
+                    id: `${extra.id}-mains`,
+                    name: extra.name.replace(/\(Mains\/Pieds([^)]*)\)/, '(Mains$1)'),
+                    price: extra.price,
+                    duration: extra.duration,
+                });
+                result.push({
+                    id: `${extra.id}-pieds`,
+                    name: extra.name.replace(/\(Mains\/Pieds([^)]*)\)/, '(Pieds$1)'),
+                    price: extra.price,
+                    duration: extra.duration,
+                });
+            } else {
+                result.push({ id: extra.id, name: extra.name, price: extra.price, duration: extra.duration });
+            }
+        }
+        return result;
+    };
+
+    // Clean up stale extra selections when switching between split/non-split mode
+    useEffect(() => {
+        const { hasBoth, hasFeet, hasHands } = getSelectedAreas();
+        const dualExtras = EXTRAS.filter(e => e.name.includes('(Mains/Pieds'));
+
+        setSelectedExtras(prev => {
+            let updated = [...prev];
+            for (const extra of dualExtras) {
+                if (hasBoth) {
+                    // Entering split mode: remove base ID (user must re-choose per area)
+                    updated = updated.filter(id => id !== extra.id);
+                } else {
+                    // Leaving split mode: convert split IDs back to base if relevant area still selected
+                    const hadMains = updated.includes(`${extra.id}-mains`);
+                    const hadPieds = updated.includes(`${extra.id}-pieds`);
+                    updated = updated.filter(id => id !== `${extra.id}-mains` && id !== `${extra.id}-pieds`);
+                    if ((hasHands && hadMains) || (hasFeet && hadPieds)) {
+                        if (!updated.includes(extra.id)) updated.push(extra.id);
+                    }
+                }
+            }
+            return updated;
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedServices]);
+
     const toggleService = (serviceId: string) => {
         setSelectedServices(prev => {
             if (prev.includes(serviceId)) {
@@ -168,8 +235,9 @@ const BookingPage = () => {
 
     const getTotal = () => {
         const servicesTotal = getSelectedServiceItems().reduce((sum, s) => sum + s.price, 0);
+        const visibleExtras = getVisibleExtras();
         const extrasTotal = selectedExtras.reduce((sum, id) => {
-            const extra = EXTRAS.find(e => e.id === id);
+            const extra = visibleExtras.find(e => e.id === id);
             return sum + (extra?.price || 0);
         }, 0);
         return servicesTotal + extrasTotal;
@@ -222,11 +290,12 @@ const BookingPage = () => {
 
         // Extras
         if (selectedExtras.length > 0) {
+            const visibleExtras = getVisibleExtras();
             const extraLabels = selectedExtras.map(id => {
-                const extra = EXTRAS.find(e => e.id === id);
+                const extra = visibleExtras.find(e => e.id === id);
                 return extra ? extra.name + ' +' + extra.price + '$' : '';
             }).filter(Boolean);
-            noteLines.push('Extras: ' + extraLabels.join(', '));
+            if (extraLabels.length > 0) noteLines.push('Extras: ' + extraLabels.join(', '));
         }
 
         // Total
@@ -599,36 +668,30 @@ const BookingPage = () => {
                                                 Extras optionnels
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                {EXTRAS.filter(extra => {
-                                                    if (!extra.categories) return true;
-                                                    const selectedCats = selectedServices
-                                                        .map(sid => SERVICE_CATEGORIES.find(c => c.services.some(s => s.id === sid))?.id)
-                                                        .filter(Boolean);
-                                                    return extra.categories.some(c => selectedCats.includes(c as string));
-                                                }).map((extra) => {
+                                                {getVisibleExtras().map((extra) => {
                                                     const isSelected = selectedExtras.includes(extra.id);
                                                     return (
                                                         <button
                                                             key={extra.id}
                                                             type="button"
                                                             onClick={() => toggleExtra(extra.id)}
-                                                            className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all text-left text-sm ${
+                                                            className={`flex items-start justify-between p-3 rounded-xl border-2 transition-all text-left text-sm ${
                                                                 isSelected
                                                                     ? 'border-primary-300 bg-primary-50 text-primary-700'
                                                                     : 'border-gray-100 bg-white text-gray-600 hover:border-gray-200'
                                                             }`}
                                                         >
-                                                            <div className="flex items-center gap-2 flex-1 min-w-0">
-                                                                <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
+                                                            <div className="flex items-start gap-3 flex-1 min-w-0 pr-2">
+                                                                <div className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
                                                                     isSelected
                                                                         ? 'bg-primary-500 text-white'
                                                                         : 'border-2 border-gray-300'
                                                                 }`}>
                                                                     {isSelected && <Check size={12} />}
                                                                 </div>
-                                                                <span className="truncate">{extra.name}</span>
+                                                                <span className="leading-snug break-words">{extra.name}</span>
                                                             </div>
-                                                            <span className={`font-bold flex-shrink-0 ml-2 ${isSelected ? 'text-primary-600' : 'text-gray-500'}`}>
+                                                            <span className={`font-bold flex-shrink-0 mt-0.5 ${isSelected ? 'text-primary-600' : 'text-gray-500'}`}>
                                                                 +{extra.price}$
                                                             </span>
                                                         </button>
