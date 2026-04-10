@@ -83,6 +83,11 @@ const EXTRAS: ExtraItem[] = [
 ];
 
 // ============================================================
+// DOMICILE SURCHARGE — +10$ on base services (not extras)
+// ============================================================
+const DOMICILE_SURCHARGE = 10;
+
+// ============================================================
 // COMPONENT
 // ============================================================
 
@@ -233,8 +238,13 @@ const BookingPage = () => {
         return items;
     };
 
+    // Get the effective price for a base service (includes domicile surcharge)
+    const getServicePrice = (basePrice: number) => {
+        return location === 'domicile' ? basePrice + DOMICILE_SURCHARGE : basePrice;
+    };
+
     const getTotal = () => {
-        const servicesTotal = getSelectedServiceItems().reduce((sum, s) => sum + s.price, 0);
+        const servicesTotal = getSelectedServiceItems().reduce((sum, s) => sum + getServicePrice(s.price), 0);
         const visibleExtras = getVisibleExtras();
         const extrasTotal = selectedExtras.reduce((sum, id) => {
             const extra = visibleExtras.find(e => e.id === id);
@@ -284,7 +294,8 @@ const BookingPage = () => {
         const serviceItems = getSelectedServiceItems();
         if (serviceItems.length > 0) {
             serviceItems.forEach(s => {
-                noteLines.push('Service: ' + s.name + ' (' + s.price + '$)');
+                const effectivePrice = getServicePrice(s.price);
+                noteLines.push('Service: ' + s.name + ' (' + effectivePrice + '$)');
             });
         }
 
@@ -642,7 +653,7 @@ const BookingPage = () => {
                                                                                     </div>
                                                                                 </div>
                                                                                 <span className={`font-bold text-lg flex-shrink-0 ml-3 ${isSelected ? colors.text : 'text-gray-900'}`}>
-                                                                                    {service.price}$
+                                                                                    {getServicePrice(service.price)}$
                                                                                 </span>
                                                                             </button>
                                                                         );
