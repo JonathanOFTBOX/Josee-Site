@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Phone, MapPin, Home, ArrowRight, Send, User, Mail, Navigation, ChevronDown, Check, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import OftboxCredit from '../components/OftboxCredit';
 
 // ============================================================
 // SERVICE CATALOG — from Price List PDF
@@ -911,6 +912,9 @@ const BookingPage = () => {
                     )}
                 </AnimatePresence>
             </div>
+            <footer className="px-4 pb-6 pt-2 flex justify-center">
+                <OftboxCredit variant="light" />
+            </footer>
         </div>
     );
 };

@@ -8,6 +8,7 @@ import About from './components/About';
 import Booking from './components/Booking';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Seo from './components/Seo';
 import BookingPage from './pages/BookingPage';
 
 function HomePage() {
@@ -28,6 +29,7 @@ function HomePage() {
 function App() {
     return (
         <BrowserRouter>
+            <Seo />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/rendez-vous" element={<BookingPage />} />

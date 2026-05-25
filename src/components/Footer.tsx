@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Facebook, Phone, Mail, MapPin, Heart, ArrowUp, Car } from 'lucide-react';
+import OftboxCredit from './OftboxCredit';
 
 const Footer = () => {
     const scrollToTop = () => {
@@ -149,13 +150,16 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary-300/70">
+                <div className="py-6 flex flex-col lg:flex-row justify-between items-center gap-4 text-sm text-primary-300/70">
                     <p className="flex items-center gap-1">
                         © {new Date().getFullYear()} Douceur Mains & Pieds Josée. Tous droits réservés.
                     </p>
-                    <p className="flex items-center gap-2">
-                        Fait avec <Heart size={14} className="text-rose-400 fill-rose-400" /> à Saint-Amable
-                    </p>
+                    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
+                        <p className="flex items-center gap-2">
+                            Fait avec <Heart size={14} className="text-rose-400 fill-rose-400" /> à Saint-Amable
+                        </p>
+                        <OftboxCredit />
+                    </div>
                 </div>
             </div>
         </footer>
